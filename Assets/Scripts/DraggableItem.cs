@@ -5,23 +5,27 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class DraggableItem : MonoBehaviour, IDragHandler, IPointerDownHandler, IPointerUpHandler
-{
-    [HideInInspector] bool isDraggable = false;
-
+{    
+    Item item;
     Canvas canvas;
     RectTransform rectTransform;
     CanvasGroup canvasGroup;
     Vector2 originalPosition;
     Vector2 pointerOffset;
     Vector2? lastTouchPosition;
-
     bool isButtonPressed = false;
+    bool isDraggable = false;
 
     void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
         canvas = FindObjectOfType<Canvas>();
+    }
+
+    void Start()
+    {
+        item = GetComponent<Item>();
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -65,7 +69,14 @@ public class DraggableItem : MonoBehaviour, IDragHandler, IPointerDownHandler, I
         isButtonPressed = false;
         isDraggable = false;
         
-        ReturnItem();
+        if (item != null)
+        {
+            item.SetNewSlot();
+        }
+        else
+        {
+            ReturnItem();
+        }
 
         if (canvasGroup != null)
         {

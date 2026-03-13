@@ -61,6 +61,8 @@ public class UIManager : MonoBehaviour
                 music.Play();
             }
         }
+
+        Slot[] allSlots = FindObjectsByType<Slot>(FindObjectsSortMode.None);
     }
 
     void Update()

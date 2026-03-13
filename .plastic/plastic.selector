@@ -1,4 +1,0 @@
-repository "SortingItems/SortingItems@10171120160911@cloud"
-  path "/"
-    br "/main"
-    co "/main"
