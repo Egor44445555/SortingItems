@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 public class DraggableItem : MonoBehaviour, IDragHandler, IPointerDownHandler, IPointerUpHandler
 {    
-    Item item;
+    Item itemComponent;
     Canvas canvas;
     RectTransform rectTransform;
     CanvasGroup canvasGroup;
@@ -25,7 +25,7 @@ public class DraggableItem : MonoBehaviour, IDragHandler, IPointerDownHandler, I
 
     void Start()
     {
-        item = GetComponent<Item>();
+        itemComponent = GetComponent<Item>();
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -49,6 +49,11 @@ public class DraggableItem : MonoBehaviour, IDragHandler, IPointerDownHandler, I
         );
 
         pointerOffset = (Vector2)rectTransform.localPosition - localPointerPos;
+
+        if (itemComponent != null && itemComponent.GetCurrentSlot() != null)
+        {
+            itemComponent.RemoveCurrentSlot();
+        }
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -61,7 +66,7 @@ public class DraggableItem : MonoBehaviour, IDragHandler, IPointerDownHandler, I
         );
 
         rectTransform.localPosition = localPointerPosition + pointerOffset;
-        isDraggable = true;
+        isDraggable = true;       
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -69,9 +74,9 @@ public class DraggableItem : MonoBehaviour, IDragHandler, IPointerDownHandler, I
         isButtonPressed = false;
         isDraggable = false;
         
-        if (item != null)
+        if (itemComponent != null && GridManager.main != null)
         {
-            item.SetNewSlot();
+            itemComponent.FindEmptySlot();
         }
         else
         {

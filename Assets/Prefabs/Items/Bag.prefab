@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3377737026963317323
+--- !u!1 &7863188911948085220
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,52 +8,52 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5776547183109622851}
-  - component: {fileID: 1317555010672937525}
-  - component: {fileID: 3189435596499492185}
-  - component: {fileID: 495792830015334904}
-  - component: {fileID: 1044726605121086860}
+  - component: {fileID: 6214961584316849652}
+  - component: {fileID: 7290564182847068585}
+  - component: {fileID: 7136526058560106763}
+  - component: {fileID: 2711997779783496400}
+  - component: {fileID: 1502224904398356846}
   m_Layer: 5
-  m_Name: Shelf
+  m_Name: Bag
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &5776547183109622851
+--- !u!224 &6214961584316849652
 RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3377737026963317323}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_GameObject: {fileID: 7863188911948085220}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2.1192052, y: 2.1192052, z: 2.1192052}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0, y: -0.000015259}
-  m_SizeDelta: {x: 184.9391, y: 67.9656}
+  m_AnchoredPosition: {x: 431.68204, y: -0.000030517578}
+  m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &1317555010672937525
+--- !u!222 &7290564182847068585
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3377737026963317323}
+  m_GameObject: {fileID: 7863188911948085220}
   m_CullTransparentMesh: 1
---- !u!114 &3189435596499492185
+--- !u!114 &7136526058560106763
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3377737026963317323}
+  m_GameObject: {fileID: 7863188911948085220}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
@@ -67,7 +67,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -8847511328382704733, guid: b468d1ee7308cd3499a73e4db264356d, type: 3}
+  m_Sprite: {fileID: -6009198046271197863, guid: fc349f8dc4d464e70a16ba9154ad1f31, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -77,40 +77,28 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &495792830015334904
+--- !u!114 &2711997779783496400
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3377737026963317323}
+  m_GameObject: {fileID: 7863188911948085220}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Script: {fileID: 11500000, guid: aebac99f87182408a80dbaeb8b2a1179, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GridLayoutGroup
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 10
-  m_ChildAlignment: 4
-  m_StartCorner: 0
-  m_StartAxis: 0
-  m_CellSize: {x: 100, y: 100}
-  m_Spacing: {x: 10, y: 0}
-  m_Constraint: 0
-  m_ConstraintCount: 2
---- !u!114 &1044726605121086860
+  m_EditorClassIdentifier: Assembly-CSharp::DraggableItem
+--- !u!114 &1502224904398356846
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3377737026963317323}
+  m_GameObject: {fileID: 7863188911948085220}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7050f35bae7e9c47a09b413e3050c0f, type: 3}
+  m_Script: {fileID: 11500000, guid: ab089e7717b6b7346a59c71ce1852e4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Shelf
-  slotPrefab: {fileID: 4888987333770347925, guid: 9e5828bf5f418084b813abe4a96161f1, type: 3}
+  m_EditorClassIdentifier: Assembly-CSharp::Item
+  name: Bag
