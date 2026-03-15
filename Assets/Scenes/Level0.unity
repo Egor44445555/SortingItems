@@ -509,9 +509,14 @@ MonoBehaviour:
   shelfPrefab: {fileID: 3377737026963317323, guid: 655a1d3d72c25174f897f23e57e51ecc, type: 3}
   emptyShelfPrefab: {fileID: 293760293200295731, guid: f0935eb7ed31b734b8e202b84b65f780, type: 3}
   itemsTransform: {fileID: 1152449412}
-  shelfsArray:
-  - position: {x: 0, y: 0}
-  - position: {x: 1, y: 0}
+  shelfsArrayPosition: 020000000400000013000000
+  slotItemArray:
+  - {fileID: 6244506303648511746, guid: 298b8d680767b4d449a1dc7420511820, type: 3}
+  - {fileID: 6244506303648511746, guid: 298b8d680767b4d449a1dc7420511820, type: 3}
+  - {fileID: 6244506303648511746, guid: 298b8d680767b4d449a1dc7420511820, type: 3}
+  - {fileID: 7863188911948085220, guid: c0dee0baf9240f2408b09853938480a9, type: 3}
+  - {fileID: 7863188911948085220, guid: c0dee0baf9240f2408b09853938480a9, type: 3}
+  - {fileID: 7863188911948085220, guid: c0dee0baf9240f2408b09853938480a9, type: 3}
 --- !u!114 &882463843
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -851,7 +856,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 4869202382932224214}
-  - {fileID: 731201939}
   - {fileID: 519420032}
   - {fileID: 619394802}
   - {fileID: 1082981874}
+  - {fileID: 731201939}
