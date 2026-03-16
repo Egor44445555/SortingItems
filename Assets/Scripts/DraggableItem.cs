@@ -52,6 +52,7 @@ public class DraggableItem : MonoBehaviour, IDragHandler, IPointerDownHandler, I
 
         if (itemComponent != null && itemComponent.GetCurrentSlot() != null)
         {
+            itemComponent.SetDraggableStatus();
             itemComponent.RemoveCurrentSlot();
         }
     }
@@ -76,7 +77,7 @@ public class DraggableItem : MonoBehaviour, IDragHandler, IPointerDownHandler, I
         
         if (itemComponent != null && GridManager.main != null)
         {
-            itemComponent.FindEmptySlot();
+            itemComponent.FindEmptySlot();       
         }
         else
         {

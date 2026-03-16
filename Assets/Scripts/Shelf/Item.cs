@@ -6,10 +6,17 @@ using System.Linq;
 public class Item : MonoBehaviour
 {
     [SerializeField] string name = "";
+    [SerializeField] GameObject destroyEffect;
 
     Slot currentSlot;
     RectTransform rectTransform;
     Canvas canvas;
+    bool isDraggable = false;
+    bool moveToTarget = false;
+    float speed = 1000f;
+    bool destroy = false;
+    float timerDestroy = 0f;
+    float timeDestroy = 0.5f;
     
     
     void Start()
@@ -18,9 +25,41 @@ public class Item : MonoBehaviour
         rectTransform = GetComponent<RectTransform>();
     }
 
+    void Update()
+    {
+        if (currentSlot != null && moveToTarget)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, currentSlot.transform.position, speed * Time.deltaTime);
+
+            if (Vector3.Distance(transform.position, currentSlot.transform.position) < 0.001f)
+            {
+                moveToTarget = false;
+            }
+        }
+
+        if (destroy)
+        {
+            timerDestroy += Time.deltaTime;
+
+            if (timerDestroy >= timeDestroy)
+            {
+                if (destroyEffect != null)
+                {
+                    Instantiate(destroyEffect, transform.position, Quaternion.identity);
+                }
+                
+                destroy = false;
+                Destroy(gameObject);
+            }
+        }
+    }
+
     public void FindEmptySlot()
     {
         var emptySlots = GridManager.main.GetAllSlots().Where(slot => slot.IsEmpty()).ToArray();
+
+        isDraggable = false;
+        moveToTarget = true;
         
         if (emptySlots.Length == 0 && canvas == null) return;
 
@@ -53,7 +92,6 @@ public class Item : MonoBehaviour
     public void SetCurrentSlot(Slot _slot)
     {
         currentSlot = _slot;
-        rectTransform.position = _slot.GetRectTransform().position;
     }
 
     public Slot GetCurrentSlot()
@@ -61,9 +99,24 @@ public class Item : MonoBehaviour
         return currentSlot;
     }
 
+    public string GetNameItem()
+    {
+        return name;
+    }
+
     public void RemoveCurrentSlot()
     {
         currentSlot.RemoveCurrentItem();
         currentSlot = null;
+    }
+
+    public void SetDraggableStatus()
+    {
+        isDraggable = true;
+    }
+
+    public void DestroyItem()
+    {
+        destroy = true;
     }
 }

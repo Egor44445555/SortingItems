@@ -13,6 +13,8 @@ public class GridManager : MonoBehaviour
     [SerializeField] List<GameObject> slotItemArray;
 
     List<Slot> allSlots = new List<Slot>();
+    float timer = 0f;
+    bool isCreateGrid = false;
 
     void Awake()
     {
@@ -28,9 +30,22 @@ public class GridManager : MonoBehaviour
 
     void Start()
     {
-        allSlots = FindObjectsByType<Slot>(FindObjectsSortMode.None).ToList();
-
         CreateGrid();
+    }
+
+    void Update()
+    {
+        if (!isCreateGrid)
+        {
+            timer += Time.deltaTime;
+        }
+        
+        if (timer > 0.5f && !isCreateGrid)
+        {
+            CreateItems();
+            isCreateGrid = true;
+            timer = 0f;
+        }
     }
 
     void CreateGrid()
@@ -39,19 +54,29 @@ public class GridManager : MonoBehaviour
         {
             if (shelfsArrayPosition.Contains(i + 1))
             {
-                Instantiate(shelfPrefab, transform);
+                GameObject shelfObj = Instantiate(shelfPrefab, transform);
+                Shelf shelfComnponent = shelfObj.GetComponent<Shelf>();
             }
             else
             {
                 Instantiate(emptyShelfPrefab, transform);
             }
         }
-        
+    }
+
+    void CreateItems()
+    {
         foreach (var item in slotItemArray)
         {
             GameObject itemObj = Instantiate(item, itemsTransform);
-            // itemObj.GetComponent<Item>();
+            Item itemComponent = itemObj.GetComponent<Item>();
+            itemComponent.FindEmptySlot();
         }
+    }
+
+    public void SetAllSlots(Slot _slot)
+    {
+        allSlots.Add(_slot);
     }
 
     public List<Slot> GetAllSlots()

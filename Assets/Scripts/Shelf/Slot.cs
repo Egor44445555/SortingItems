@@ -4,6 +4,7 @@ public class Slot : MonoBehaviour
 {
     Item currentItem;
     RectTransform rectTransform;
+    Shelf shelf;
 
     void Start()
     {
@@ -23,6 +24,7 @@ public class Slot : MonoBehaviour
     public void SetCurrentItem(Item _item)
     {
         currentItem = _item;
+        shelf.CheckInnerSlots();
     }
 
     public bool IsEmpty()
@@ -33,5 +35,10 @@ public class Slot : MonoBehaviour
     public void RemoveCurrentItem()
     {
         currentItem = null;
+    }
+
+    public void SetShelf(Shelf _shelf)
+    {
+        shelf = _shelf;
     }
 }

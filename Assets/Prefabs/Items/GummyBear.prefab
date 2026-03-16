@@ -102,3 +102,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
   name: GummyBear
+  destroyEffect: {fileID: 7272702072606867423, guid: 5fb3260b40840c04d96831748312c476, type: 3}
