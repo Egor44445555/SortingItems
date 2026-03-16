@@ -35,6 +35,7 @@ public class Slot : MonoBehaviour
     public void RemoveCurrentItem()
     {
         currentItem = null;
+        shelf.CheckInnerSlots();
     }
 
     public void SetShelf(Shelf _shelf)

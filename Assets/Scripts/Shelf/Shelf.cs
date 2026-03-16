@@ -10,11 +10,10 @@ public class Shelf : MonoBehaviour
     
     void Start()
     {
-        for (var i = 0; 3 > i; i++)
+        for (int i = 0; 3 > i; i++)
         {
-            GameObject slot = Instantiate(slotPrefab, Vector3.zero, Quaternion.identity);
+            GameObject slot = Instantiate(slotPrefab, Vector3.zero, Quaternion.identity, transform);
             Slot slotComponent = slot.GetComponent<Slot>();
-            slot.transform.SetParent(this.transform);
             slotComponent.SetShelf(this);
             innerSlots.Add(slotComponent);
 
@@ -62,8 +61,9 @@ public class Shelf : MonoBehaviour
         foreach (var slot in innerSlots)
         {
             Item itemComponent = slot.GetCurrentItem().GetComponent<Item>();
+            GridManager.main.RemoveItemInArray(itemComponent);
             itemComponent.DestroyItem();
-            slot.SetCurrentItem(null);
+            slot.RemoveCurrentItem();
         }
     }
 }

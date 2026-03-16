@@ -9,10 +9,11 @@ public class GridManager : MonoBehaviour
     [SerializeField] GameObject shelfPrefab;
     [SerializeField] GameObject emptyShelfPrefab;
     [SerializeField] Transform itemsTransform;
-    [SerializeField] List<int> shelfsArrayPosition;
+    [SerializeField] List<int> shelvesArrayPosition;
     [SerializeField] List<GameObject> slotItemArray;
 
     List<Slot> allSlots = new List<Slot>();
+    List<Item> allItems = new List<Item>();
     float timer = 0f;
     bool isCreateGrid = false;
 
@@ -52,7 +53,7 @@ public class GridManager : MonoBehaviour
     {
         for (var i = 0; i < 20; i++)
         {
-            if (shelfsArrayPosition.Contains(i + 1))
+            if (shelvesArrayPosition.Contains(i + 1))
             {
                 GameObject shelfObj = Instantiate(shelfPrefab, transform);
                 Shelf shelfComnponent = shelfObj.GetComponent<Shelf>();
@@ -66,11 +67,21 @@ public class GridManager : MonoBehaviour
 
     void CreateItems()
     {
-        foreach (var item in slotItemArray)
+        List<Slot> availableSlots = allSlots.Where(slot => slot.IsEmpty()).ToList();
+
+        foreach (GameObject item in slotItemArray)
         {
-            GameObject itemObj = Instantiate(item, itemsTransform);
+            if (availableSlots.Count == 0) break;
+            
+            int randomIndex = Random.Range(0, availableSlots.Count);
+            Slot selectedSlot = availableSlots[randomIndex];
+            
+            GameObject itemObj = Instantiate(item, selectedSlot.transform.position, selectedSlot.transform.rotation, itemsTransform);
             Item itemComponent = itemObj.GetComponent<Item>();
-            itemComponent.FindEmptySlot();
+            itemComponent.SetCurrentSlot(selectedSlot);
+            selectedSlot.SetCurrentItem(itemComponent);            
+            allItems.Add(itemComponent);            
+            availableSlots.RemoveAt(randomIndex);
         }
     }
 
@@ -82,5 +93,20 @@ public class GridManager : MonoBehaviour
     public List<Slot> GetAllSlots()
     {
         return allSlots;
+    }
+
+    public void RemoveItemInArray(Item _item)
+    {
+        allItems.Remove(_item);
+
+        if (allItems.Count <= 0)
+        {
+            print("End level");
+        }
+    }
+
+    public List<Item> GetAllItems()
+    {
+        return allItems;
     }
 }

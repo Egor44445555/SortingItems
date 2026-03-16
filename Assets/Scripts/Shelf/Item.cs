@@ -16,7 +16,7 @@ public class Item : MonoBehaviour
     float speed = 1000f;
     bool destroy = false;
     float timerDestroy = 0f;
-    float timeDestroy = 0.5f;
+    float timeDestroy = 0.3f;
     
     
     void Start()
@@ -56,6 +56,8 @@ public class Item : MonoBehaviour
 
     public void FindEmptySlot()
     {
+        RemoveCurrentSlot();
+
         var emptySlots = GridManager.main.GetAllSlots().Where(slot => slot.IsEmpty()).ToArray();
 
         isDraggable = false;
@@ -73,7 +75,7 @@ public class Item : MonoBehaviour
                 slot.GetRectTransform().position
             );
             
-            float distance = Vector2.Distance(mousePosition, slot.GetRectTransform().position);
+            float distance = Vector2.Distance(mousePosition, slotScreenPosition);
             
             if (distance < minDistance)
             {
@@ -106,8 +108,11 @@ public class Item : MonoBehaviour
 
     public void RemoveCurrentSlot()
     {
-        currentSlot.RemoveCurrentItem();
-        currentSlot = null;
+        if (currentSlot != null)
+        {
+            currentSlot.RemoveCurrentItem();
+            currentSlot = null;
+        }
     }
 
     public void SetDraggableStatus()

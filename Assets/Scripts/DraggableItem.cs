@@ -52,8 +52,8 @@ public class DraggableItem : MonoBehaviour, IDragHandler, IPointerDownHandler, I
 
         if (itemComponent != null && itemComponent.GetCurrentSlot() != null)
         {
-            itemComponent.SetDraggableStatus();
             itemComponent.RemoveCurrentSlot();
+            itemComponent.SetDraggableStatus();
         }
     }
 
