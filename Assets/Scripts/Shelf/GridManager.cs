@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,10 +9,12 @@ public class GridManager : MonoBehaviour
 
     [SerializeField] GameObject shelfPrefab;
     [SerializeField] GameObject emptyShelfPrefab;
+    [SerializeField] GameObject itemPrefab;
     [SerializeField] Transform itemsTransform;
     [SerializeField] List<int> shelvesArrayPosition;
-    [SerializeField] List<GameObject> slotItemArray;
+    [SerializeField] List<SlotItemArray> slotItemArray;
 
+    Transform parentTransform;
     List<Slot> allSlots = new List<Slot>();
     List<Item> allItems = new List<Item>();
     float timer = 0f;
@@ -31,6 +34,7 @@ public class GridManager : MonoBehaviour
 
     void Start()
     {
+        parentTransform = FindObjectOfType<LevelManager>().transform;
         CreateGrid();
     }
 
@@ -51,7 +55,7 @@ public class GridManager : MonoBehaviour
 
     void CreateGrid()
     {
-        for (var i = 0; i < 20; i++)
+        for (var i = 0; i < 30; i++)
         {
             if (shelvesArrayPosition.Contains(i + 1))
             {
@@ -69,19 +73,26 @@ public class GridManager : MonoBehaviour
     {
         List<Slot> availableSlots = allSlots.Where(slot => slot.IsEmpty()).ToList();
 
-        foreach (GameObject item in slotItemArray)
+        foreach (SlotItemArray item in slotItemArray)
         {
-            if (availableSlots.Count == 0) break;
+            for (int i = 0; item.amount > i; i++)
+            {
+                if (availableSlots.Count == 0) break;
             
-            int randomIndex = Random.Range(0, availableSlots.Count);
-            Slot selectedSlot = availableSlots[randomIndex];
-            
-            GameObject itemObj = Instantiate(item, selectedSlot.transform.position, selectedSlot.transform.rotation, itemsTransform);
-            Item itemComponent = itemObj.GetComponent<Item>();
-            itemComponent.SetCurrentSlot(selectedSlot);
-            selectedSlot.SetCurrentItem(itemComponent);            
-            allItems.Add(itemComponent);            
-            availableSlots.RemoveAt(randomIndex);
+                int randomIndex = Random.Range(0, availableSlots.Count);
+                Slot selectedSlot = availableSlots[randomIndex];
+                
+                GameObject itemObj = Instantiate(itemPrefab, selectedSlot.transform.position, selectedSlot.transform.rotation, itemsTransform);
+                itemObj.GetComponent<RectTransform>().sizeDelta = selectedSlot.GetComponent<RectTransform>().sizeDelta;
+                itemObj.GetComponent<Image>().sprite = item.icon;
+                
+                Item itemComponent = itemObj.GetComponent<Item>();
+                itemComponent.SetName(item.name);
+                itemComponent.SetCurrentSlot(selectedSlot);
+                selectedSlot.SetCurrentItem(itemComponent);
+                allItems.Add(itemComponent);            
+                availableSlots.RemoveAt(randomIndex);
+            }
         }
     }
 
@@ -99,14 +110,24 @@ public class GridManager : MonoBehaviour
     {
         allItems.Remove(_item);
 
-        if (allItems.Count <= 0)
+        if (allItems.Count <= 0 && UIManager.main != null)
         {
-            print("End level");
+            UIManager.main.EndLevel();
         }
     }
 
     public List<Item> GetAllItems()
     {
         return allItems;
+    }
+
+    public Transform GetWrapperTransform()
+    {
+        return parentTransform;
+    }
+
+    public Transform GetParentItemsTransform()
+    {
+        return itemsTransform;
     }
 }

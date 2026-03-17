@@ -4,10 +4,14 @@ using UnityEngine;
 [Serializable]
 public class SlotItemArray
 {
-    public GameObject item;
+    public string name;
+    public int amount;
+    public Sprite icon;
 
-    public SlotItemArray(GameObject _item)
+    public SlotItemArray(string _name, int _amount, Sprite _icon)
     {
-        item = _item;
+        name = _name;
+        amount = _amount;
+        icon = _icon;
     }
 }

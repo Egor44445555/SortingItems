@@ -13,7 +13,7 @@ public class Item : MonoBehaviour
     Canvas canvas;
     bool isDraggable = false;
     bool moveToTarget = false;
-    float speed = 1000f;
+    float speed = 2000f;
     bool destroy = false;
     float timerDestroy = 0f;
     float timeDestroy = 0.3f;
@@ -99,6 +99,11 @@ public class Item : MonoBehaviour
     public Slot GetCurrentSlot()
     {
         return currentSlot;
+    }
+
+    public void SetName(string _name)
+    {
+        name = _name;
     }
 
     public string GetNameItem()

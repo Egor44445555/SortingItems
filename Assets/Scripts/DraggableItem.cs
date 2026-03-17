@@ -54,6 +54,8 @@ public class DraggableItem : MonoBehaviour, IDragHandler, IPointerDownHandler, I
         {
             itemComponent.RemoveCurrentSlot();
             itemComponent.SetDraggableStatus();
+            transform.SetParent(GridManager.main.GetWrapperTransform());
+            UIManager.main.PlayGrabEffect();
         }
     }
 
@@ -77,7 +79,9 @@ public class DraggableItem : MonoBehaviour, IDragHandler, IPointerDownHandler, I
         
         if (itemComponent != null && GridManager.main != null)
         {
-            itemComponent.FindEmptySlot();       
+            UIManager.main.PlayThrowEffect();
+            transform.SetParent(GridManager.main.GetParentItemsTransform());   
+            itemComponent.FindEmptySlot();
         }
         else
         {

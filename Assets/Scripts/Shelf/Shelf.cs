@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 public class Shelf : MonoBehaviour
 {
@@ -58,6 +57,8 @@ public class Shelf : MonoBehaviour
 
     public void ClearInnerSlots()
     {
+        UIManager.main.PlayCollectedEffectEffect();
+
         foreach (var slot in innerSlots)
         {
             Item itemComponent = slot.GetCurrentItem().GetComponent<Item>();

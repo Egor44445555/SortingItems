@@ -9725,6 +9725,7 @@ GameObject:
   - component: {fileID: 6058421980169281451}
   - component: {fileID: 3254955271032054948}
   - component: {fileID: 2002490497543706474}
+  - component: {fileID: -8805850710806072946}
   m_Layer: 0
   m_Name: DestroyItemEffect
   m_TagString: Effect
@@ -14582,6 +14583,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af7d68a3a3369b84a8067a45caaaf767, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DestroyAfterParticles
+--- !u!114 &-8805850710806072946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7272702072606867423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1eea1424105061746a20017785963f47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Destroy
+  time: 2
 --- !u!1 &7275488109540418304
 GameObject:
   m_ObjectHideFlags: 0

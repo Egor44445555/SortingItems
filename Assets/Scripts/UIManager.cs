@@ -17,7 +17,9 @@ public class UIManager : MonoBehaviour
     [Header("Audio")]
     [SerializeField] GameObject sounIconDisabled;
     [SerializeField] AudioSource music;
-    [SerializeField] AudioSource effect;
+    [SerializeField] AudioSource grabEffect;
+    [SerializeField] AudioSource throwEffect;
+    [SerializeField] AudioSource collectedEffect;
     
     Camera cam;
     Vector2 startPoint = new Vector2();
@@ -26,9 +28,30 @@ public class UIManager : MonoBehaviour
     bool endLevel = false;
     float timer = 0f;
     PlayerData playerData;
+    string[] availableScenes;
 
     void Awake()
     {
+        int currentSceneIndex = UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex;
+        availableScenes = new string[SceneManager.sceneCountInBuildSettings];
+        
+        for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
+        {
+            string scenePath = SceneUtility.GetScenePathByBuildIndex(i);
+            availableScenes[i] = System.IO.Path.GetFileNameWithoutExtension(scenePath);
+        }
+
+        if (JsonSave.main != null)
+        {
+            playerData = JsonSave.LoadData<PlayerData>("playerData");
+            currentLevel = playerData.currentLevel;
+        }
+
+        if (currentSceneIndex != currentLevel)
+        {
+            StartLevel();
+        }        
+
         if (main == null)
         {
             main = this;
@@ -41,12 +64,6 @@ public class UIManager : MonoBehaviour
     
     void Start()
     {
-        if (JsonSave.main != null)
-        {
-            playerData = JsonSave.LoadData<PlayerData>("playerData");
-            currentLevel = playerData.currentLevel;
-        }
-
         Time.timeScale = 1f;
         cam = Camera.main;
 
@@ -161,6 +178,30 @@ public class UIManager : MonoBehaviour
         CheckSoundIcon();
     }
 
+    public void PlayThrowEffect()
+    {
+        if (IsSoundsActive() && throwEffect != null)
+        {
+            throwEffect.Play();
+        }  
+    }
+
+    public void PlayGrabEffect()
+    {
+        if (IsSoundsActive() && grabEffect != null)
+        {
+            grabEffect.Play();
+        }        
+    }
+
+    public void PlayCollectedEffectEffect()
+    {
+        if (IsSoundsActive() && collectedEffect != null)
+        {
+            collectedEffect.Play();
+        }        
+    }    
+
     public void CheckSoundIcon()
     {
         if (!IsSoundsActive())
@@ -169,6 +210,19 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public bool IsSoundsActive()
+    {
+        return PlayerPrefs.GetString("SoundEnable") == "1";
+    }
+
+    public void EndLevel()
+    {
+        if (successMenu != null)
+        {
+            endLevel = true;
+        }
+    }
+    
     public void StartLevel()
     {
         SceneManager.LoadSceneAsync("Level" + currentLevel);
@@ -176,19 +230,26 @@ public class UIManager : MonoBehaviour
 
     public void StartNextLevel()
     {
+        currentLevel += 1;
+
+        string sceneName = "Level" + (currentLevel);
+        bool existNewLevel = System.Array.Exists(availableScenes, scene => scene == sceneName);
+
         if (JsonSave.main != null)
         {
             playerData = JsonSave.LoadData<PlayerData>("playerData");
-            playerData.currentLevel += 1;
+            playerData.currentLevel = existNewLevel ? currentLevel : 0;            
             JsonSave.SaveData(playerData, "playerData");
         }
 
-        SceneManager.LoadSceneAsync("Level" + (currentLevel + 1));
-    }
-
-    public bool IsSoundsActive()
-    {
-        return PlayerPrefs.GetString("SoundEnable") == "1";
+        if (existNewLevel)
+        {
+            SceneManager.LoadScene(sceneName);
+        }
+        else
+        {
+            SceneManager.LoadSceneAsync("Level0");
+        }
     }
 
     IEnumerator SuccessLevel()
