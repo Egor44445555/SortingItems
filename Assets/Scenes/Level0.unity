@@ -585,7 +585,7 @@ MonoBehaviour:
   emptyShelfPrefab: {fileID: 293760293200295731, guid: f0935eb7ed31b734b8e202b84b65f780, type: 3}
   itemPrefab: {fileID: 7863188911948085220, guid: a08addaa08b5c0049af2d410c9938066, type: 3}
   itemsTransform: {fileID: 1152449412}
-  shelvesArrayPosition: 090000000a0000000b0000000c000000
+  shelvesArrayPosition: 090000000a0000000b000000
   slotItemArray:
   - name: Bag
     amount: 3
@@ -613,10 +613,10 @@ MonoBehaviour:
   m_ChildAlignment: 4
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 302, y: 110}
+  m_CellSize: {x: 200, y: 75}
   m_Spacing: {x: 0, y: 0}
-  m_Constraint: 0
-  m_ConstraintCount: 2
+  m_Constraint: 1
+  m_ConstraintCount: 4
 --- !u!1 &1082981871
 GameObject:
   m_ObjectHideFlags: 0

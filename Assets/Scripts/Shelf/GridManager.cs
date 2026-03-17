@@ -55,7 +55,7 @@ public class GridManager : MonoBehaviour
 
     void CreateGrid()
     {
-        for (var i = 0; i < 30; i++)
+        for (var i = 0; i < 32; i++)
         {
             if (shelvesArrayPosition.Contains(i + 1))
             {
@@ -72,15 +72,26 @@ public class GridManager : MonoBehaviour
     void CreateItems()
     {
         List<Slot> availableSlots = allSlots.Where(slot => slot.IsEmpty()).ToList();
-
+        
         foreach (SlotItemArray item in slotItemArray)
         {
             for (int i = 0; item.amount > i; i++)
             {
                 if (availableSlots.Count == 0) break;
-            
-                int randomIndex = Random.Range(0, availableSlots.Count);
-                Slot selectedSlot = availableSlots[randomIndex];
+                
+                List<Slot> validSlots = availableSlots
+                    .Where(slot => !WouldExceedThreeSameItems(slot, item))
+                    .ToList();
+                
+                if (validSlots.Count == 0)
+                {
+                    validSlots = availableSlots;
+                }
+                
+                if (validSlots.Count == 0) break;
+                
+                int randomIndex = Random.Range(0, validSlots.Count);
+                Slot selectedSlot = validSlots[randomIndex];
                 
                 GameObject itemObj = Instantiate(itemPrefab, selectedSlot.transform.position, selectedSlot.transform.rotation, itemsTransform);
                 itemObj.GetComponent<RectTransform>().sizeDelta = selectedSlot.GetComponent<RectTransform>().sizeDelta;
@@ -90,10 +101,34 @@ public class GridManager : MonoBehaviour
                 itemComponent.SetName(item.name);
                 itemComponent.SetCurrentSlot(selectedSlot);
                 selectedSlot.SetCurrentItem(itemComponent);
-                allItems.Add(itemComponent);            
-                availableSlots.RemoveAt(randomIndex);
+                
+                allItems.Add(itemComponent);
+                availableSlots.Remove(selectedSlot);
             }
         }
+    }
+
+    bool WouldExceedThreeSameItems(Slot slot, SlotItemArray item)
+    {
+        Transform shelf = slot.transform.parent;        
+        int sameItemCount = 0;
+        
+        foreach (Transform child in shelf)
+        {
+            Slot childSlot = child.GetComponent<Slot>();
+
+            if (childSlot != null && !childSlot.IsEmpty())
+            {
+                Item itemInSlot = childSlot.GetCurrentItem();
+
+                if (itemInSlot != null && itemInSlot.GetName() == item.name)
+                {
+                    sameItemCount++;
+                }
+            }
+        }
+        
+        return sameItemCount >= 2;
     }
 
     public void SetAllSlots(Slot _slot)

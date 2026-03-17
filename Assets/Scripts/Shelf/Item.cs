@@ -101,6 +101,11 @@ public class Item : MonoBehaviour
         return currentSlot;
     }
 
+    public string GetName()
+    {
+        return name;
+    }
+
     public void SetName(string _name)
     {
         name = _name;

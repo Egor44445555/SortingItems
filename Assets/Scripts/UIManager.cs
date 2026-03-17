@@ -41,17 +41,6 @@ public class UIManager : MonoBehaviour
             availableScenes[i] = System.IO.Path.GetFileNameWithoutExtension(scenePath);
         }
 
-        if (JsonSave.main != null)
-        {
-            playerData = JsonSave.LoadData<PlayerData>("playerData");
-            currentLevel = playerData.currentLevel;
-        }
-
-        if (currentSceneIndex != currentLevel)
-        {
-            StartLevel();
-        }        
-
         if (main == null)
         {
             main = this;
@@ -64,6 +53,12 @@ public class UIManager : MonoBehaviour
     
     void Start()
     {
+        if (JsonSave.main != null)
+        {
+            playerData = JsonSave.LoadData<PlayerData>("playerData");
+            currentLevel = playerData.currentLevel;
+        }
+
         Time.timeScale = 1f;
         cam = Camera.main;
 
@@ -225,20 +220,25 @@ public class UIManager : MonoBehaviour
     
     public void StartLevel()
     {
-        SceneManager.LoadSceneAsync("Level" + currentLevel);
+        if (System.Array.Exists(availableScenes, scene => scene == "Level" + currentLevel))
+        {
+            SceneManager.LoadSceneAsync("Level" + currentLevel);
+        }
+        else
+        {
+            SceneManager.LoadSceneAsync("Level0");
+        }
     }
 
     public void StartNextLevel()
     {
-        currentLevel += 1;
-
-        string sceneName = "Level" + (currentLevel);
+        string sceneName = "Level" + (currentLevel + 1);
         bool existNewLevel = System.Array.Exists(availableScenes, scene => scene == sceneName);
 
         if (JsonSave.main != null)
         {
             playerData = JsonSave.LoadData<PlayerData>("playerData");
-            playerData.currentLevel = existNewLevel ? currentLevel : 0;            
+            playerData.currentLevel = existNewLevel ? currentLevel + 1 : 0;
             JsonSave.SaveData(playerData, "playerData");
         }
 
@@ -248,13 +248,13 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            SceneManager.LoadSceneAsync("Level0");
+            SceneManager.LoadSceneAsync("MainMenu");
         }
     }
 
     IEnumerator SuccessLevel()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.3f);
         gamePause = true;
 
         if (successMenu != null)
