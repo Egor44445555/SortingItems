@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 public class Item : MonoBehaviour
 {
@@ -17,12 +18,15 @@ public class Item : MonoBehaviour
     bool destroy = false;
     float timerDestroy = 0f;
     float timeDestroy = 0.3f;
+    Animator anim;
+    bool animationPlay = false;
     
     
     void Start()
     {
         canvas = LevelManager.main.GetCanvas();
         rectTransform = GetComponent<RectTransform>();
+        anim = GetComponent<Animator>();
     }
 
     void Update()
@@ -34,6 +38,19 @@ public class Item : MonoBehaviour
             if (Vector3.Distance(transform.position, currentSlot.transform.position) < 0.001f)
             {
                 moveToTarget = false;
+                anim.SetBool("Placed", true);
+                animationPlay = true;
+            }
+        }
+        
+        if (animationPlay)
+        {
+            AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
+        
+            if (stateInfo.IsName("PlacedItem") && stateInfo.normalizedTime >= 1.0f)
+            {
+                anim.SetBool("Placed", false);
+                animationPlay = false;
             }
         }
 
@@ -52,6 +69,17 @@ public class Item : MonoBehaviour
                 Destroy(gameObject);
             }
         }
+    }
+
+    public bool IsAnimationPlaying(string animationName) 
+    {        
+        var animatorStateInfo = anim.GetCurrentAnimatorStateInfo(0);
+        if (animatorStateInfo.IsName(animationName))
+        {
+            return true;
+        }
+        
+        return false;
     }
 
     public void FindEmptySlot()
