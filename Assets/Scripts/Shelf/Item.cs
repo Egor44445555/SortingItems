@@ -40,6 +40,7 @@ public class Item : MonoBehaviour
                 moveToTarget = false;
                 anim.SetBool("Placed", true);
                 animationPlay = true;
+                UIManager.main.PlayThrowEffect();
             }
         }
         
