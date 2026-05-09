@@ -6,11 +6,12 @@ TagManager:
   tags:
   - Popup
   - Effect
+  - HUD
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - HUD
   - Water
   - UI
   - 

@@ -7,7 +7,7 @@ public class Shelf : MonoBehaviour
 
     List<Slot> innerSlots = new List<Slot>();
     
-    void Start()
+    void Awake()
     {
         for (int i = 0; 3 > i; i++)
         {

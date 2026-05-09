@@ -7,18 +7,21 @@ public class GridManager : MonoBehaviour
 {
     public static GridManager main;
 
+    [Header("Prefabs")]
     [SerializeField] GameObject shelfPrefab;
     [SerializeField] GameObject emptyShelfPrefab;
     [SerializeField] GameObject itemPrefab;
     [SerializeField] Transform itemsTransform;
-    [SerializeField] List<int> shelvesArrayPosition;
-    [SerializeField] List<SlotItemArray> slotItemArray;
+
+    [Header("Level Configuration")]
+    [SerializeField] LevelData currentLevelData;
+    [SerializeField] List<Sprite> itemIconsDatabase;
 
     Transform parentTransform;
     List<Slot> allSlots = new List<Slot>();
     List<Item> allItems = new List<Item>();
-    float timer = 0f;
-    bool isCreateGrid = false;
+    
+    Shelf[] spawnedShelves = new Shelf[32];
 
     void Awake()
     {
@@ -34,106 +37,113 @@ public class GridManager : MonoBehaviour
 
     void Start()
     {
-        parentTransform = FindObjectOfType<LevelManager>().transform;
-        CreateGrid();
-    }
+        if (currentLevelData == null)
+        {
+            Debug.LogError("LevelData не назначена в GridManager!");
+            return;
+        }
 
-    void Update()
-    {
-        if (!isCreateGrid)
-        {
-            timer += Time.deltaTime;
-        }
+        parentTransform = FindObjectOfType<LevelManager>().transform;
         
-        if (timer > 0.5f && !isCreateGrid)
-        {
-            CreateItems();
-            isCreateGrid = true;
-            timer = 0f;
-        }
+        CreateGrid();        
+        CreateItemsFromData();
     }
 
     void CreateGrid()
     {
+        spawnedShelves = new Shelf[32];
+        allSlots.Clear();
+
         for (var i = 0; i < 32; i++)
         {
-            if (shelvesArrayPosition.Contains(i + 1))
+            Vector3 position = GetPositionForIndex(i);
+            
+            if (currentLevelData.activeShelfIndices.Contains(i))
             {
-                GameObject shelfObj = Instantiate(shelfPrefab, transform);
-                Shelf shelfComnponent = shelfObj.GetComponent<Shelf>();
+                GameObject shelfObj = Instantiate(shelfPrefab, position, Quaternion.identity, transform);
+                Shelf shelfComponent = shelfObj.GetComponent<Shelf>();
+                spawnedShelves[i] = shelfComponent;
             }
             else
             {
-                Instantiate(emptyShelfPrefab, transform);
+                Instantiate(emptyShelfPrefab, position, Quaternion.identity, transform);
             }
         }
     }
 
-    void CreateItems()
+    Vector3 GetPositionForIndex(int index)
     {
-        List<Slot> availableSlots = allSlots.Where(slot => slot.IsEmpty()).ToList();
+        int cols = 8;
+        float xOffset = 1.2f;
+        float yOffset = 1.5f;
         
-        foreach (SlotItemArray item in slotItemArray)
+        int x = index % cols;
+        int y = index / cols;
+        
+        return new Vector3(x * xOffset, -y * yOffset, 0);
+    }
+
+    void CreateItemsFromData()
+    {
+        if (itemsTransform == null) 
         {
-            for (int i = 0; item.amount > i; i++)
+            itemsTransform = new GameObject("ItemsContainer").transform;
+            itemsTransform.SetParent(transform);
+        }
+
+        foreach (var startItem in currentLevelData.startingItems)
+        {
+            if (startItem.shelfIndex < 0 || startItem.shelfIndex >= 32) continue;
+            if (startItem.slotIndex < 0 || startItem.slotIndex > 2) continue;
+
+            Shelf targetShelf = spawnedShelves[startItem.shelfIndex];
+            
+            if (targetShelf == null)continue;
+
+            List<Slot> slots = targetShelf.GetInnerSlots();
+
+            if (startItem.slotIndex >= slots.Count) continue;
+
+            Slot targetSlot = slots[startItem.slotIndex];
+
+            if (!targetSlot.IsEmpty())
             {
-                if (availableSlots.Count == 0) break;
-                
-                List<Slot> validSlots = availableSlots
-                    .Where(slot => !WouldExceedThreeSameItems(slot, item))
-                    .ToList();
-                
-                if (validSlots.Count == 0)
-                {
-                    validSlots = availableSlots;
-                }
-                
-                if (validSlots.Count == 0) break;
-                
-                int randomIndex = Random.Range(0, validSlots.Count);
-                Slot selectedSlot = validSlots[randomIndex];
-                
-                GameObject itemObj = Instantiate(itemPrefab, selectedSlot.transform.position, selectedSlot.transform.rotation, itemsTransform);
-                itemObj.GetComponent<RectTransform>().sizeDelta = selectedSlot.GetComponent<RectTransform>().sizeDelta;
-                itemObj.GetComponent<Image>().sprite = item.icon;
-                
-                Item itemComponent = itemObj.GetComponent<Item>();
-                itemComponent.SetName(item.name);
-                itemComponent.SetCurrentSlot(selectedSlot);
-                selectedSlot.SetCurrentItem(itemComponent);
-                
-                allItems.Add(itemComponent);
-                availableSlots.Remove(selectedSlot);
+                Debug.Log($"Слот {startItem.shelfIndex}:{startItem.slotIndex} уже занят!");
+                continue;
             }
+
+            SpawnItemInSlot(targetSlot, startItem.image);
         }
     }
 
-    bool WouldExceedThreeSameItems(Slot slot, SlotItemArray item)
+    void SpawnItemInSlot(Slot slot, Sprite image)
     {
-        Transform shelf = slot.transform.parent;        
-        int sameItemCount = 0;
+        Debug.Log($"SpawnItemInSlot");
+
+        GameObject itemObj = Instantiate(itemPrefab, slot.transform.position, slot.transform.rotation, itemsTransform);
+
+        Item itemComponent = itemObj.GetComponent<Item>();
+        itemComponent.SetName(image.name);
+
+        Image img = itemObj.GetComponent<Image>();
         
-        foreach (Transform child in shelf)
+        if (img == null)
         {
-            Slot childSlot = child.GetComponent<Slot>();
-
-            if (childSlot != null && !childSlot.IsEmpty())
-            {
-                Item itemInSlot = childSlot.GetCurrentItem();
-
-                if (itemInSlot != null && itemInSlot.GetName() == item.name)
-                {
-                    sameItemCount++;
-                }
-            }
+            img.sprite = image;
         }
-        
-        return sameItemCount >= 2;
+
+        itemComponent.SetCurrentSlot(slot);
+        slot.SetCurrentItem(itemComponent);
+
+        allItems.Add(itemComponent);
     }
 
     public void SetAllSlots(Slot _slot)
     {
-        allSlots.Add(_slot);
+        if (!allSlots.Contains(_slot))
+        {
+            allSlots.Add(_slot);
+        }
     }
 
     public List<Slot> GetAllSlots()
@@ -143,7 +153,10 @@ public class GridManager : MonoBehaviour
 
     public void RemoveItemInArray(Item _item)
     {
-        allItems.Remove(_item);
+        if (allItems.Contains(_item))
+        {
+            allItems.Remove(_item);
+        }
 
         if (allItems.Count <= 0 && UIManager.main != null)
         {

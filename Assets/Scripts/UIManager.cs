@@ -248,7 +248,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            SceneManager.LoadSceneAsync("MainMenu");
+            // SceneManager.LoadSceneAsync("MainMenu");
         }
     }
 
@@ -265,7 +265,7 @@ public class UIManager : MonoBehaviour
    
     public void ToMenu()
     {
-        SceneManager.LoadSceneAsync("MainMenu");
+        // SceneManager.LoadSceneAsync("MainMenu");
     }
 
     public void Restart()
