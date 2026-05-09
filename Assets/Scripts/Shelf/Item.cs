@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,25 +7,25 @@ using System.Reflection;
 
 public class Item : MonoBehaviour
 {
-    [SerializeField] string name = "";
     [SerializeField] GameObject destroyEffect;
 
-    Slot currentSlot;
+    public Slot currentSlot;
+    public bool moveToTarget = true;
     RectTransform rectTransform;
-    Canvas canvas;
     bool isDraggable = false;
-    bool moveToTarget = false;
     float speed = 2000f;
     bool destroy = false;
     float timerDestroy = 0f;
     float timeDestroy = 0.3f;
     Animator anim;
     bool animationPlay = false;
+    string name = "";
+    Image image;
     
     
-    void Start()
+    void Awake()
     {
-        canvas = LevelManager.main.GetCanvas();
+        image = GetComponent<Image>();
         rectTransform = GetComponent<RectTransform>();
         anim = GetComponent<Animator>();
     }
@@ -32,7 +33,7 @@ public class Item : MonoBehaviour
     void Update()
     {
         if (currentSlot != null && moveToTarget)
-        {
+        {            
             transform.position = Vector3.MoveTowards(transform.position, currentSlot.transform.position, speed * Time.deltaTime);
 
             if (Vector3.Distance(transform.position, currentSlot.transform.position) < 0.001f)
@@ -71,7 +72,18 @@ public class Item : MonoBehaviour
             }
         }
     }
+    
+    public void Initialize(Slot slot, Sprite _image)
+    {
+        if (image != null)
+        {
+            image.sprite = _image;
+        }
 
+        SetName(image.name);
+        SetCurrentSlot(slot);
+        slot.SetCurrentItem(this);
+    }
     public bool IsAnimationPlaying(string animationName) 
     {        
         var animatorStateInfo = anim.GetCurrentAnimatorStateInfo(0);
@@ -92,7 +104,7 @@ public class Item : MonoBehaviour
         isDraggable = false;
         moveToTarget = true;
         
-        if (emptySlots.Length == 0 && canvas == null) return;
+        if (emptySlots.Length == 0) return;
 
         Slot nearestSlot = null;
         float minDistance = float.MaxValue;
@@ -123,6 +135,11 @@ public class Item : MonoBehaviour
     public void SetCurrentSlot(Slot _slot)
     {
         currentSlot = _slot;
+
+        if (currentSlot != null)
+        {
+            moveToTarget = true;
+        }
     }
 
     public Slot GetCurrentSlot()

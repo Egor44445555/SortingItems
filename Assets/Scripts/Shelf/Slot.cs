@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Slot : MonoBehaviour
 {
-    Item currentItem;
+    public Item currentItem;
     RectTransform rectTransform;
     Shelf shelf;
 

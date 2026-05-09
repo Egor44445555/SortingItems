@@ -12,8 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 972775043b798ad4bb413e78838787f6, type: 3}
   m_Name: Level1
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
-  activeShelfIndices: 090000000a000000
-  startingItems:
-  - shelfIndex: 10
-    slotIndex: 0
-    image: {fileID: -6686202827246400773, guid: c5ece7a0e16f1fa4e8bd1ea26ebecbe0, type: 3}
+  shelvesConfig:
+  - shelfType: 1
+    rowIndex: 0
+  - shelfType: 2
+    rowIndex: 0
+  - shelfType: 1
+    rowIndex: 0
+  - shelfType: 3
+    rowIndex: 1
+  - shelfType: 1
+    rowIndex: 2
+  - shelfType: 2
+    rowIndex: 2
+  startingItems: []

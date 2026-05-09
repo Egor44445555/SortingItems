@@ -68,7 +68,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -6009198046271197863, guid: fc349f8dc4d464e70a16ba9154ad1f31, type: 3}
+  m_Sprite: {fileID: -8548104044005507832, guid: b2af3c98ca19ffa43a74332480ddc353, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -102,8 +102,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab089e7717b6b7346a59c71ce1852e4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
-  name: Bag
   destroyEffect: {fileID: 7272702072606867423, guid: 5fb3260b40840c04d96831748312c476, type: 3}
+  currentSlot: {fileID: 0}
+  moveToTarget: 1
 --- !u!95 &5308540637379397107
 Animator:
   serializedVersion: 7
