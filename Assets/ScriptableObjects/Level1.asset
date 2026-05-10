@@ -15,14 +15,18 @@ MonoBehaviour:
   shelvesConfig:
   - shelfType: 1
     rowIndex: 0
-  - shelfType: 2
-    rowIndex: 0
-  - shelfType: 1
-    rowIndex: 0
   - shelfType: 3
     rowIndex: 1
-  - shelfType: 1
-    rowIndex: 2
-  - shelfType: 2
-    rowIndex: 2
-  startingItems: []
+  startingItems:
+  - image: {fileID: -8548104044005507832, guid: b2af3c98ca19ffa43a74332480ddc353, type: 3}
+    shelfIndex: 0
+    slotIndex: 0
+    behindItems: []
+  - image: {fileID: -8548104044005507832, guid: b2af3c98ca19ffa43a74332480ddc353, type: 3}
+    shelfIndex: 1
+    slotIndex: 0
+    behindItems: []
+  - image: {fileID: -8548104044005507832, guid: b2af3c98ca19ffa43a74332480ddc353, type: 3}
+    shelfIndex: 1
+    slotIndex: 2
+    behindItems: []

@@ -8,20 +8,24 @@ public class GridManager : MonoBehaviour
     public static GridManager main;
 
     [Header("Prefabs")]
-    [SerializeField] GameObject shelfPrefab;
-    [SerializeField] GameObject emptyShelfPrefab;
     [SerializeField] GameObject itemPrefab;
-    [SerializeField] Transform itemsTransform;
+    [SerializeField] Transform itemsContainer;
+    [SerializeField] GameObject[] shelfPrefabs;
 
+    [Header("Settings")]
+    [SerializeField] float horizontalSpacing = 10f;
+    [SerializeField] float verticalSpacing = 10f;
+    
     [Header("Level Configuration")]
-    [SerializeField] LevelData currentLevelData;
-    [SerializeField] List<Sprite> itemIconsDatabase;
+    [SerializeField] LevelData levelData;
 
     Transform parentTransform;
     List<Slot> allSlots = new List<Slot>();
     List<Item> allItems = new List<Item>();
-    
-    Shelf[] spawnedShelves = new Shelf[32];
+    List<Shelf> allShelves = new List<Shelf>();
+
+    bool isDraggable = false;
+    bool startCheckShelfs = false;
 
     void Awake()
     {
@@ -37,91 +41,139 @@ public class GridManager : MonoBehaviour
 
     void Start()
     {
-        if (currentLevelData == null)
+        parentTransform = FindObjectOfType<LevelManager>().transform;        
+        GenerateLevel();
+    }
+
+    void Update()
+    {
+        if (startCheckShelfs && !isDraggable)
         {
-            Debug.LogError("LevelData не назначена в GridManager!");
-            return;
+            foreach (Shelf shelf in allShelves)
+            {
+                shelf.CheckEmptySlots();
+            }
+            startCheckShelfs = false;
+        }
+    }
+
+    public void GenerateLevel()
+    {
+        if (levelData == null) return;
+
+        foreach (Transform child in transform) Destroy(child.gameObject);
+        allSlots.Clear();
+
+        var shelvesByRow = levelData.shelvesConfig
+            .GroupBy(s => s.rowIndex)
+            .OrderBy(g => g.Key)
+            .ToList();
+        float rowHeight = shelfPrefabs[0].GetComponent<RectTransform>().rect.height; 
+
+        float currentY = (shelvesByRow.Count * rowHeight) / 2f - (verticalSpacing * shelvesByRow.Count);
+
+        foreach (var rowGroup in shelvesByRow)
+        {
+            var rowShelves = rowGroup.ToList();
+            float totalRowWidth = 0;
+            List<float> shelfWidths = new List<float>();
+
+            foreach (var shelfData in rowShelves)
+            {
+                GameObject prefab = GetShelfPrefabByType(shelfData.shelfType);                
+                float width = prefab.GetComponent<RectTransform>().rect.width;
+                
+                shelfWidths.Add(width);
+                totalRowWidth += width;
+            }
+
+            if (rowShelves.Count > 1)
+            {
+                totalRowWidth += horizontalSpacing * (rowShelves.Count - 1);
+            }
+
+            float currentX = 0f;
+
+            if (shelfWidths.Count > 1)
+            {
+                currentX = -(totalRowWidth / 3f);
+            }
+
+            for (int i = 0; i < rowShelves.Count; i++)
+            {
+                var shelfData = rowShelves[i];
+                GameObject prefab = GetShelfPrefabByType(shelfData.shelfType);                
+                GameObject shelfObj = Instantiate(prefab, transform);                
+                Vector3 pos = new Vector3(currentX, currentY, 0);
+
+                shelfObj.transform.localPosition = pos;
+
+                allShelves.Add(shelfObj.GetComponent<Shelf>());
+
+                Slot[] slots = shelfObj.GetComponentsInChildren<Slot>();
+                allSlots.AddRange(slots);
+                
+                foreach(var slot in slots) SetAllSlots(slot);
+
+                if (i < rowShelves.Count - 1)
+                {
+                    float currentW = shelfWidths[i];
+                    float nextW = shelfWidths[i + 1];                    
+                    float step = (currentW / 2f) + horizontalSpacing + (nextW / 2f);
+                    
+                    currentX += step;
+                }
+            }
+            
+            currentY -= (rowHeight + verticalSpacing);
         }
 
-        parentTransform = FindObjectOfType<LevelManager>().transform;
-        
-        // CreateGrid();        
-        // CreateItemsFromData();
+        CreateItemsFromData();
     }
 
-    // void CreateGrid()
-    // {
-    //     spawnedShelves = new Shelf[32];
-    //     allSlots.Clear();
-
-    //     for (var i = 0; i < 32; i++)
-    //     {
-    //         Vector3 position = GetPositionForIndex(i);
-            
-    //         if (currentLevelData.activeShelfIndices.Contains(i))
-    //         {
-    //             GameObject shelfObj = Instantiate(shelfPrefab, position, Quaternion.identity, transform);
-    //             Shelf shelfComponent = shelfObj.GetComponent<Shelf>();
-    //             spawnedShelves[i] = shelfComponent;
-    //         }
-    //         else
-    //         {
-    //             Instantiate(emptyShelfPrefab, position, Quaternion.identity, transform);
-    //         }
-    //     }
-    // }
-
-    Vector3 GetPositionForIndex(int index)
+    GameObject GetShelfPrefabByType(int type)
     {
-        int cols = 8;
-        float xOffset = 1.2f;
-        float yOffset = 1.5f;
+        int index = type - 1;
+        if (index >= 0 && index < shelfPrefabs.Length)
+            return shelfPrefabs[index];
         
-        int x = index % cols;
-        int y = index / cols;
-        
-        return new Vector3(x * xOffset, -y * yOffset, 0);
+        Debug.LogError($"Prefab for shelf type {type} not found!");
+        return shelfPrefabs[shelfPrefabs.Length - 1]; // Fallback
     }
 
-    // void CreateItemsFromData()
-    // {
-    //     if (itemsTransform == null) 
-    //     {
-    //         itemsTransform = new GameObject("ItemsContainer").transform;
-    //         itemsTransform.SetParent(transform);
-    //     }
-
-    //     foreach (var startItem in currentLevelData.startingItems)
-    //     {
-    //         if (startItem.shelfIndex < 0 || startItem.shelfIndex >= 32) continue;
-    //         if (startItem.slotIndex < 0 || startItem.slotIndex > 2) continue;
-
-    //         Shelf targetShelf = spawnedShelves[startItem.shelfIndex];
-            
-    //         if (targetShelf == null)continue;
-
-    //         List<Slot> slots = targetShelf.GetInnerSlots();
-
-    //         if (startItem.slotIndex >= slots.Count) continue;
-
-    //         Slot targetSlot = slots[startItem.slotIndex];
-
-    //         if (!targetSlot.IsEmpty())
-    //         {
-    //             Debug.Log($"Слот {startItem.shelfIndex}:{startItem.slotIndex} уже занят!");
-    //             continue;
-    //         }
-
-    //         SpawnItemInSlot(targetSlot, startItem.image);
-    //     }
-    // }
-
-    void SpawnItemInSlot(Slot slot, Sprite image)
+    void CreateItemsFromData()
     {
-        GameObject itemObj = Instantiate(itemPrefab, slot.transform.position, slot.transform.rotation, itemsTransform);
+        foreach (var startItem in levelData.startingItems)
+        {
+            Shelf targetShelf = allShelves[startItem.shelfIndex];
+            
+            if (targetShelf == null) continue;
 
+            List<Slot> slots = targetShelf.GetInnerSlots();
+
+            if (startItem.slotIndex >= slots.Count) continue;
+
+            Slot targetSlot = slots[startItem.slotIndex];
+
+            if (!targetSlot.IsEmpty()) continue;
+
+            if (startItem.behindItems.Count > 0)
+            {
+                foreach (var behindItem in startItem.behindItems)
+                {
+                    CreateItem(targetSlot, behindItem.image, true);
+                }
+            }
+
+            CreateItem(targetSlot, startItem.image, false);
+        }
+    }
+
+    void CreateItem(Slot slot, Sprite _image, bool _isBehind)
+    {
+        GameObject itemObj = Instantiate(itemPrefab, slot.GetComponent<RectTransform>().anchoredPosition, slot.transform.rotation, itemsContainer);
         Item itemComponent = itemObj.GetComponent<Item>();
-        itemComponent.Initialize(slot, image);
+        itemComponent.Initialize(slot, _image, _isBehind);
         allItems.Add(itemComponent);
     }
 
@@ -161,8 +213,19 @@ public class GridManager : MonoBehaviour
         return parentTransform;
     }
 
-    public Transform GetParentItemsTransform()
+    public Transform GetParentItemsContainer()
     {
-        return itemsTransform;
+        return itemsContainer;
+    }
+
+    public void SetDraggable(bool _draggable)
+    {
+        isDraggable = _draggable;
+        startCheckShelfs = true;
+    }
+
+    public bool IsDraggable()
+    {
+        return isDraggable;
     }
 }

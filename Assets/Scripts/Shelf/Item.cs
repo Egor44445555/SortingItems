@@ -8,38 +8,55 @@ using System.Reflection;
 public class Item : MonoBehaviour
 {
     [SerializeField] GameObject destroyEffect;
+    [SerializeField] GameObject disableImage;
 
-    public Slot currentSlot;
-    public bool moveToTarget = true;
-    RectTransform rectTransform;
+    Slot currentSlot;
+    bool moveToTarget = true;
     bool isDraggable = false;
     float speed = 2000f;
     bool destroy = false;
     float timerDestroy = 0f;
     float timeDestroy = 0.3f;
-    Animator anim;
     bool animationPlay = false;
     string name = "";
+    public bool isBehind = false;
+    float behindDifferentSize = 15f;
+    float offsetBehind = 30f;
+    float currentWidth;
+    bool negativeIndent = false;
+
+    RectTransform rectTransform;
     Image image;
-    
-    
+    DraggableItem draggableItem;
+    Animator anim;
+        
     void Awake()
     {
-        image = GetComponent<Image>();
         rectTransform = GetComponent<RectTransform>();
+        draggableItem = GetComponent<DraggableItem>();
+        image = GetComponent<Image>();
         anim = GetComponent<Animator>();
+
+        currentWidth = GetComponent<RectTransform>().rect.width;
     }
 
     void Update()
     {
         if (currentSlot != null && moveToTarget)
-        {            
-            transform.position = Vector3.MoveTowards(transform.position, currentSlot.transform.position, speed * Time.deltaTime);
+        {
+            Vector3 targetPos = currentSlot.transform.position;
 
-            if (Vector3.Distance(transform.position, currentSlot.transform.position) < 0.001f)
+            if (isBehind)
             {
-                moveToTarget = false;
-                anim.SetBool("Placed", true);
+                targetPos.x = negativeIndent ? targetPos.x - offsetBehind : targetPos.x + offsetBehind;
+            }
+
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
+
+            if (Vector3.Distance(transform.position, targetPos) < 0.001f)
+            {
+                moveToTarget = false;                
+                AnimationPlay("Placed", true);
                 animationPlay = true;
                 UIManager.main.PlayThrowEffect();
             }
@@ -51,7 +68,7 @@ public class Item : MonoBehaviour
         
             if (stateInfo.IsName("PlacedItem") && stateInfo.normalizedTime >= 1.0f)
             {
-                anim.SetBool("Placed", false);
+                AnimationPlay("Placed", false);
                 animationPlay = false;
             }
         }
@@ -73,17 +90,43 @@ public class Item : MonoBehaviour
         }
     }
     
-    public void Initialize(Slot slot, Sprite _image)
+    public void AnimationPlay(string _name, bool _play)
     {
-        if (image != null)
+        anim.SetBool(_name, _play);
+    }
+    
+    public void Initialize(Slot slot, Sprite _image, bool _isBehind)
+    {
+        moveToTarget = true;
+        name = _image.name;
+        image.sprite = _image;
+
+        if (!_isBehind)
         {
-            image.sprite = _image;
+            EnableDraggable(true);
+        }
+        else
+        {
+            int random = Random.Range(0, 2);
+            negativeIndent = random == 1;
+
+            isBehind = true;
+            rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x - behindDifferentSize, rectTransform.sizeDelta.y - behindDifferentSize);
+            draggableItem.enabled = false;
         }
 
-        SetName(image.name);
         SetCurrentSlot(slot);
-        slot.SetCurrentItem(this);
+        
+        if (_isBehind)
+        {
+            slot.SetBehindItem(this);
+        }
+        else
+        {
+            slot.SetCurrentItem(this);
+        }
     }
+    
     public bool IsAnimationPlaying(string animationName) 
     {        
         var animatorStateInfo = anim.GetCurrentAnimatorStateInfo(0);
@@ -99,7 +142,7 @@ public class Item : MonoBehaviour
     {
         RemoveCurrentSlot();
 
-        var emptySlots = GridManager.main.GetAllSlots().Where(slot => slot.IsEmpty()).ToArray();
+        var emptySlots = GridManager.main.GetAllSlots().Where(slot => slot.IsEmpty() && slot.GetBehindItemsCount() == 0).ToArray();
 
         isDraggable = false;
         moveToTarget = true;
@@ -147,16 +190,6 @@ public class Item : MonoBehaviour
         return currentSlot;
     }
 
-    public string GetName()
-    {
-        return name;
-    }
-
-    public void SetName(string _name)
-    {
-        name = _name;
-    }
-
     public string GetNameItem()
     {
         return name;
@@ -179,5 +212,14 @@ public class Item : MonoBehaviour
     public void DestroyItem()
     {
         destroy = true;
+    }
+
+    public void EnableDraggable(bool _enable)
+    {
+        isBehind = false;
+        draggableItem.enabled = _enable;
+        disableImage.SetActive(false);
+        rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x + behindDifferentSize, rectTransform.sizeDelta.y + behindDifferentSize);
+        moveToTarget = true;
     }
 }

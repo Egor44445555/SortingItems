@@ -154,7 +154,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 2113.088, y: 1043.8638}
+  m_SizeDelta: {x: 3702.9033, y: 1829.2312}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &137106452
 MonoBehaviour:
@@ -469,7 +469,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -542,7 +542,6 @@ GameObject:
   m_Component:
   - component: {fileID: 882463841}
   - component: {fileID: 882463842}
-  - component: {fileID: 882463844}
   m_Layer: 5
   m_Name: GridShelfs
   m_TagString: Untagged
@@ -581,33 +580,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53cb1d63186f42f4292e5410a3393dac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridManager
-  shelfPrefab: {fileID: 3377737026963317323, guid: 655a1d3d72c25174f897f23e57e51ecc, type: 3}
-  emptyShelfPrefab: {fileID: 293760293200295731, guid: f0935eb7ed31b734b8e202b84b65f780, type: 3}
   itemPrefab: {fileID: 7863188911948085220, guid: a08addaa08b5c0049af2d410c9938066, type: 3}
-  itemsTransform: {fileID: 1152449412}
-  currentLevelData: {fileID: 11400000, guid: be2fcf50a79f2f94685121356b7aec5e, type: 2}
-  itemIconsDatabase:
-  - {fileID: 0}
---- !u!114 &882463844
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 882463840}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: feb6ae78642dec14fafe2e0cc154778a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LevelLayoutGenerator
-  horizontalSpacing: 5
-  verticalSpacing: 0
-  startY: 0
+  itemsContainer: {fileID: 1152449412}
   shelfPrefabs:
   - {fileID: 3377737026963317323, guid: 97882559115eaee45b961fad2fb0faa5, type: 3}
   - {fileID: 3377737026963317323, guid: dafffdb0c3762cf489a6525e9b4a8b2d, type: 3}
   - {fileID: 3377737026963317323, guid: 655a1d3d72c25174f897f23e57e51ecc, type: 3}
-  levelData: {fileID: 11400000, guid: be2fcf50a79f2f94685121356b7aec5e, type: 2}
+  horizontalSpacing: 10
+  verticalSpacing: 10
+  levelData: {fileID: 11400000, guid: f85a4be3bba2c4e4aab0421ebce43d21, type: 2}
 --- !u!1 &1082981871
 GameObject:
   m_ObjectHideFlags: 0
@@ -717,10 +698,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 731201939}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1539463391
 GameObject:

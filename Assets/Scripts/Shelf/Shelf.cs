@@ -1,15 +1,23 @@
 using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
 using System.Collections.Generic;
 
 public class Shelf : MonoBehaviour
 {
     [SerializeField] GameObject slotPrefab;
+    [SerializeField] int slotCount = 3;
 
     List<Slot> innerSlots = new List<Slot>();
+
+    Image image;
+    bool checkSlots = false;
     
     void Awake()
     {
-        for (int i = 0; 3 > i; i++)
+        image = GetComponent<Image>();
+
+        for (int i = 0; slotCount > i; i++)
         {
             GameObject slot = Instantiate(slotPrefab, Vector3.zero, Quaternion.identity, transform);
             Slot slotComponent = slot.GetComponent<Slot>();
@@ -28,32 +36,50 @@ public class Shelf : MonoBehaviour
         return innerSlots;
     }
 
-    public void CheckInnerSlots()
-    {        
-        Item item1 = innerSlots[0].GetCurrentItem();
-        Item item2 = innerSlots[1].GetCurrentItem();
-        Item item3 = innerSlots[2].GetCurrentItem();
+    public void CheckEmptySlots()
+    {
+        int countEmptySlot = 0;
         
-        if (item1 == null || item2 == null || item3 == null)
+        foreach (Slot slot in innerSlots)
         {
-            OnSlotsMatched?.Invoke(false, null);
-            return;
+            if (slot.IsEmpty())
+            {
+                countEmptySlot++;
+            }
         }
-        
-        bool allItemsMatch = item1.GetNameItem() == item2.GetNameItem() && item2.GetNameItem() == item3.GetNameItem();
-        
-        if (allItemsMatch)
+
+        if (countEmptySlot == slotCount)
         {
-            OnSlotsMatched?.Invoke(true, item1);
-            ClearInnerSlots();
-        }
-        else
-        {
-            OnSlotsMatched?.Invoke(false, null);
+            foreach (Slot slot in innerSlots)
+            {
+                slot.CheckBehindItems();
+            }
         }
     }
 
-    public event System.Action<bool, Item> OnSlotsMatched;
+    public void CheckInnerSlots()
+    {
+        checkSlots = true;        
+
+        if (slotCount == 3)
+        {
+            Item item1 = innerSlots[0].GetCurrentItem();
+            Item item2 = innerSlots[1].GetCurrentItem();
+            Item item3 = innerSlots[2].GetCurrentItem();
+            
+            if (item1 == null || item2 == null || item3 == null)
+            {
+                return;
+            }
+            
+            bool allItemsMatch = item1.GetNameItem() == item2.GetNameItem() && item2.GetNameItem() == item3.GetNameItem();
+            
+            if (allItemsMatch)
+            {
+                ClearInnerSlots();
+            }
+        }
+    }
 
     public void ClearInnerSlots()
     {

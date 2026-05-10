@@ -1,10 +1,13 @@
 using UnityEngine;
+using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class Slot : MonoBehaviour
 {
-    public Item currentItem;
+    Item currentItem;
     RectTransform rectTransform;
     Shelf shelf;
+    public Queue<Item> behindItems = new Queue<Item>();
 
     void Start()
     {
@@ -25,6 +28,29 @@ public class Slot : MonoBehaviour
     {
         currentItem = _item;
         shelf.CheckInnerSlots();
+    }
+
+    public void SetBehindItem(Item _item)
+    {
+        behindItems.Enqueue(_item);
+    }
+
+    public void CheckBehindItems()
+    {
+        if (behindItems.Count > 0)
+        {
+            currentItem = behindItems.Dequeue();
+            currentItem.transform.SetParent(GridManager.main.GetWrapperTransform());
+            currentItem.transform.SetParent(GridManager.main.GetParentItemsContainer());            
+            currentItem.EnableDraggable(true);
+            currentItem.GetComponent<Image>().color = new Color(255, 255, 255, 1);
+            currentItem.AnimationPlay("Placed", true);
+        }
+    }
+
+    public int GetBehindItemsCount()
+    {
+        return behindItems.Count;
     }
 
     public bool IsEmpty()

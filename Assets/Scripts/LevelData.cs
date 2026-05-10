@@ -17,8 +17,15 @@ public class LevelData : ScriptableObject
         public Sprite image;
         public int shelfIndex;
         public int slotIndex;
+        public List<ItemSpawnBehind> behindItems;
+    }
+
+    [System.Serializable]
+    public class ItemSpawnBehind
+    {
+        public Sprite image;
     }
 
     public List<ShelfConfig> shelvesConfig;
-    public List<SlotItemArray> startingItems;
+    public List<ItemSpawn> startingItems;
 }

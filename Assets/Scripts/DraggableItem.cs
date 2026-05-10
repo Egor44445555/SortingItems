@@ -69,18 +69,22 @@ public class DraggableItem : MonoBehaviour, IDragHandler, IPointerDownHandler, I
         );
 
         rectTransform.localPosition = localPointerPosition + pointerOffset;
-        isDraggable = true;       
+        isDraggable = true;
+
+        GridManager.main.SetDraggable(true);
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
         isButtonPressed = false;
         isDraggable = false;
+
+        GridManager.main.SetDraggable(false);
         
         if (itemComponent != null && GridManager.main != null)
         {
             UIManager.main.PlayThrowEffect();
-            transform.SetParent(GridManager.main.GetParentItemsTransform());   
+            transform.SetParent(GridManager.main.GetParentItemsContainer());
             itemComponent.FindEmptySlot();
         }
         else
