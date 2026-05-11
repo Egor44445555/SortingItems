@@ -15,11 +15,13 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject successMenu;
 
     [Header("Audio")]
+    [SerializeField] GameObject musicDisabled;
     [SerializeField] GameObject sounIconDisabled;
     [SerializeField] AudioSource music;
     [SerializeField] AudioSource grabEffect;
     [SerializeField] AudioSource throwEffect;
     [SerializeField] AudioSource collectedEffect;
+    [SerializeField] AudioSource fanfareEffect;
     
     Camera cam;
     Vector2 startPoint = new Vector2();
@@ -64,7 +66,7 @@ public class UIManager : MonoBehaviour
 
         if (music != null)
         {
-            if (!IsSoundsActive())
+            if (!IsMusicActive())
             {
                 music.Pause();
             }
@@ -147,12 +149,12 @@ public class UIManager : MonoBehaviour
         return gamePause;
     }
 
-    public void SwitchSound()
+    public void SwitchMusic()
     {
-        if (!IsSoundsActive())
+        if (!IsMusicActive())
         {
-            sounIconDisabled.SetActive(false);
-            PlayerPrefs.SetString("SoundEnable", "1");
+            musicDisabled.SetActive(false);
+            PlayerPrefs.SetString("MusicEnable", "1");
 
             if (music != null)
             {
@@ -161,13 +163,29 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            sounIconDisabled.SetActive(true);
-            PlayerPrefs.SetString("SoundEnable", "0");
+            musicDisabled.SetActive(true);
+            PlayerPrefs.SetString("MusicEnable", "0");
 
             if (music != null)
             {
                 music.Pause();
             }
+        }
+
+        CheckSoundIcon();
+    }
+
+    public void SwitchSound()
+    {
+        if (!IsSoundsActive())
+        {
+            sounIconDisabled.SetActive(false);
+            PlayerPrefs.SetString("SoundEnable", "1");
+        }
+        else
+        {
+            sounIconDisabled.SetActive(true);
+            PlayerPrefs.SetString("SoundEnable", "0");
         }
 
         CheckSoundIcon();
@@ -189,13 +207,21 @@ public class UIManager : MonoBehaviour
         }        
     }
 
-    public void PlayCollectedEffectEffect()
+    public void PlayCollectedEffect()
     {
         if (IsSoundsActive() && collectedEffect != null)
         {
             collectedEffect.Play();
         }        
-    }    
+    }
+
+    public void PlayFanfareEffect()
+    {
+        if (IsSoundsActive() && fanfareEffect != null)
+        {
+            fanfareEffect.Play();
+        }        
+    }
 
     public void CheckSoundIcon()
     {
@@ -210,45 +236,16 @@ public class UIManager : MonoBehaviour
         return PlayerPrefs.GetString("SoundEnable") == "1";
     }
 
-    public void EndLevel()
+    public bool IsMusicActive()
+    {
+        return PlayerPrefs.GetString("MusicEnable") == "1";
+    }
+
+    public void EndLevel(int _level)
     {
         if (successMenu != null)
         {
             endLevel = true;
-        }
-    }
-    
-    public void StartLevel()
-    {
-        if (System.Array.Exists(availableScenes, scene => scene == "Level" + currentLevel))
-        {
-            SceneManager.LoadSceneAsync("Level" + currentLevel);
-        }
-        else
-        {
-            SceneManager.LoadSceneAsync("Level0");
-        }
-    }
-
-    public void StartNextLevel()
-    {
-        string sceneName = "Level" + (currentLevel + 1);
-        bool existNewLevel = System.Array.Exists(availableScenes, scene => scene == sceneName);
-
-        if (JsonSave.main != null)
-        {
-            playerData = JsonSave.LoadData<PlayerData>("playerData");
-            playerData.currentLevel = existNewLevel ? currentLevel + 1 : 0;
-            JsonSave.SaveData(playerData, "playerData");
-        }
-
-        if (existNewLevel)
-        {
-            SceneManager.LoadScene(sceneName);
-        }
-        else
-        {
-            // SceneManager.LoadSceneAsync("MainMenu");
         }
     }
 
@@ -257,10 +254,10 @@ public class UIManager : MonoBehaviour
         yield return new WaitForSeconds(0.3f);
         gamePause = true;
 
-        if (successMenu != null)
-        {
-            successMenu.SetActive(true);
-        }
+        // if (successMenu != null)
+        // {
+        //     successMenu.SetActive(true);
+        // }
     }
    
     public void ToMenu()

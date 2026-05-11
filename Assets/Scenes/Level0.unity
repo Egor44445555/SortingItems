@@ -588,7 +588,9 @@ MonoBehaviour:
   - {fileID: 3377737026963317323, guid: 655a1d3d72c25174f897f23e57e51ecc, type: 3}
   horizontalSpacing: 10
   verticalSpacing: 10
-  levelData: {fileID: 11400000, guid: f85a4be3bba2c4e4aab0421ebce43d21, type: 2}
+  levelData:
+  - {fileID: 11400000, guid: be2fcf50a79f2f94685121356b7aec5e, type: 2}
+  - {fileID: 11400000, guid: f85a4be3bba2c4e4aab0421ebce43d21, type: 2}
 --- !u!1 &1082981871
 GameObject:
   m_ObjectHideFlags: 0
@@ -734,6 +736,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1698252702
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1698252704}
+  - component: {fileID: 1698252703}
+  m_Layer: 0
+  m_Name: YGPlugin
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1698252703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1698252702}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5dd8a29f8faf3cb4f81fdfb0d8815ac2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::YGPlugin
+--- !u!4 &1698252704
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1698252702}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 469.18103, y: 334.16058, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1849063361
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -861,3 +907,4 @@ SceneRoots:
   - {fileID: 619394802}
   - {fileID: 1082981874}
   - {fileID: 731201939}
+  - {fileID: 1698252704}

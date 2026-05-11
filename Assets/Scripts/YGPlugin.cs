@@ -27,13 +27,15 @@ public class YGPlugin : MonoBehaviour
 
         if (GetPlayerLevel() == "")
         {
-            SetPlayerLevel("2");
+            SetPlayerLevel("0");
         }
 
         if (GetPlayerCoins() != "")
         {
             GameManager.main.AddCoins(int.Parse(GetPlayerCoins()));
         }
+
+        GridManager.main.Initialize();
     }
 
     void Start()

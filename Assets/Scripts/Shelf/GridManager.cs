@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,7 +18,7 @@ public class GridManager : MonoBehaviour
     [SerializeField] float verticalSpacing = 10f;
     
     [Header("Level Configuration")]
-    [SerializeField] LevelData levelData;
+    [SerializeField] LevelData[] levelData;
 
     Transform parentTransform;
     List<Slot> allSlots = new List<Slot>();
@@ -26,6 +27,8 @@ public class GridManager : MonoBehaviour
 
     bool isDraggable = false;
     bool startCheckShelfs = false;
+    int currentLevel = 0;
+    Coroutine coroutine;
 
     void Awake()
     {
@@ -39,9 +42,17 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    void Start()
+    public void Initialize()
     {
-        parentTransform = FindObjectOfType<LevelManager>().transform;        
+        parentTransform = FindObjectOfType<LevelManager>().transform;
+        currentLevel = int.Parse(YGPlugin.main.GetPlayerLevel());
+
+        if (currentLevel > levelData.Length - 1)
+        {
+            currentLevel = 0;
+            YGPlugin.main.SetPlayerLevel(currentLevel.ToString());
+        }
+
         GenerateLevel();
     }
 
@@ -59,12 +70,12 @@ public class GridManager : MonoBehaviour
 
     public void GenerateLevel()
     {
-        if (levelData == null) return;
+        if (levelData[currentLevel] == null) return;
 
         foreach (Transform child in transform) Destroy(child.gameObject);
         allSlots.Clear();
 
-        var shelvesByRow = levelData.shelvesConfig
+        var shelvesByRow = levelData[currentLevel].shelvesConfig
             .GroupBy(s => s.rowIndex)
             .OrderBy(g => g.Key)
             .ToList();
@@ -143,7 +154,7 @@ public class GridManager : MonoBehaviour
 
     void CreateItemsFromData()
     {
-        foreach (var startItem in levelData.startingItems)
+        foreach (var startItem in levelData[currentLevel].startingItems)
         {
             Shelf targetShelf = allShelves[startItem.shelfIndex];
             
@@ -190,19 +201,6 @@ public class GridManager : MonoBehaviour
         return allSlots;
     }
 
-    public void RemoveItemInArray(Item _item)
-    {
-        if (allItems.Contains(_item))
-        {
-            allItems.Remove(_item);
-        }
-
-        if (allItems.Count <= 0 && UIManager.main != null)
-        {
-            UIManager.main.EndLevel();
-        }
-    }
-
     public List<Item> GetAllItems()
     {
         return allItems;
@@ -216,6 +214,63 @@ public class GridManager : MonoBehaviour
     public Transform GetParentItemsContainer()
     {
         return itemsContainer;
+    }
+
+    public void RemoveItemInArray(Item _item)
+    {
+        if (allItems.Contains(_item))
+        {
+            allItems.Remove(_item);
+        }
+
+        if (allItems.Count <= 0 && UIManager.main != null)
+        {
+            Nextlevel();
+            UIManager.main.EndLevel(currentLevel);
+        }
+    }
+
+    public void Nextlevel()
+    {
+        currentLevel++;
+
+        if (currentLevel > levelData.Length - 1)
+        {
+            currentLevel = 0;
+        }
+
+        YGPlugin.main.SetPlayerLevel(currentLevel.ToString());
+
+        if (coroutine != null)
+        {
+            StopCoroutine(coroutine);
+        }        
+
+        coroutine = StartCoroutine(ClearLevel());
+    }
+
+    IEnumerator ClearLevel()
+    {
+        yield return new WaitForSeconds(0.3f);
+
+        UIManager.main.PlayFanfareEffect();
+        
+        yield return new WaitForSeconds(1f);
+
+        float time = 0.3f * allShelves.Count;
+
+        foreach (Shelf shelf in allShelves)
+        {
+            shelf.ClearLevel();
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        yield return new WaitForSeconds(time);
+
+        allShelves.Clear();
+        allSlots.Clear();
+        allItems.Clear();
+        GenerateLevel();
     }
 
     public void SetDraggable(bool _draggable)

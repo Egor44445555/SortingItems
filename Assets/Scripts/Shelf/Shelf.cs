@@ -12,6 +12,8 @@ public class Shelf : MonoBehaviour
 
     Image image;
     bool checkSlots = false;
+    Vector3 endPoint;
+    bool clearLevel = false;
     
     void Awake()
     {
@@ -27,6 +29,19 @@ public class Shelf : MonoBehaviour
             if (GridManager.main != null)
             {
                 GridManager.main.SetAllSlots(slotComponent);
+            }
+        }
+    }
+
+    void Update()
+    {
+        if (endPoint != null && clearLevel)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, endPoint, 3000f * Time.deltaTime);
+
+            if (Vector3.Distance(transform.position, endPoint) < 0.001f)
+            {
+                Destroy(gameObject);
             }
         }
     }
@@ -83,7 +98,7 @@ public class Shelf : MonoBehaviour
 
     public void ClearInnerSlots()
     {
-        UIManager.main.PlayCollectedEffectEffect();
+        UIManager.main.PlayCollectedEffect();
 
         foreach (var slot in innerSlots)
         {
@@ -92,5 +107,11 @@ public class Shelf : MonoBehaviour
             itemComponent.DestroyItem();
             slot.RemoveCurrentItem();
         }
+    }
+
+    public void ClearLevel()
+    {
+        clearLevel = true;
+        endPoint = new Vector3(transform.position.x, transform.position.y + 1000f, transform.position.z);
     }
 }
