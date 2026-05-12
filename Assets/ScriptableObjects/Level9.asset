@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 972775043b798ad4bb413e78838787f6, type: 3}
+  m_Name: Level9
+  m_EditorClassIdentifier: Assembly-CSharp::LevelData
+  shelvesConfig:
+  - shelfType: 1
+    rowIndex: 0
+  - shelfType: 3
+    rowIndex: 0
+  - shelfType: 1
+    rowIndex: 0
+  - shelfType: 1
+    rowIndex: 1
+  - shelfType: 1
+    rowIndex: 2
+  - shelfType: 3
+    rowIndex: 2
+  - shelfType: 1
+    rowIndex: 2
+  - shelfType: 1
+    rowIndex: 3
+  - shelfType: 3
+    rowIndex: 4
+  startingItems:
+  - image: {fileID: 2800000, guid: 13e49b6d4ba1b14479f4db6ed5d02911, type: 3}
+    shelfIndex: 1
+    slotIndex: 0
+    behindItems:
+    - image: {fileID: 2800000, guid: f839a2b3c8e81e44c9b76417c04304e4, type: 3}
+    - image: {fileID: 2800000, guid: f839a2b3c8e81e44c9b76417c04304e4, type: 3}
+    - image: {fileID: 2800000, guid: 5bfea53791f51614983e4ce6114a5c21, type: 3}
+    - image: {fileID: 2800000, guid: 5bfea53791f51614983e4ce6114a5c21, type: 3}
+    - image: {fileID: 2800000, guid: 2a14b858144f9054cbeb6d3e2d39d35e, type: 3}
+    - image: {fileID: 2800000, guid: 2a14b858144f9054cbeb6d3e2d39d35e, type: 3}
+  - image: {fileID: 2800000, guid: f839a2b3c8e81e44c9b76417c04304e4, type: 3}
+    shelfIndex: 1
+    slotIndex: 1
+    behindItems:
+    - image: {fileID: 2800000, guid: f839a2b3c8e81e44c9b76417c04304e4, type: 3}
+    - image: {fileID: 2800000, guid: 5bfea53791f51614983e4ce6114a5c21, type: 3}
+    - image: {fileID: 2800000, guid: 2d335908fd38c684f8b69da0b9d47599, type: 3}
+    - image: {fileID: 2800000, guid: 13e49b6d4ba1b14479f4db6ed5d02911, type: 3}
+    - image: {fileID: 2800000, guid: f839a2b3c8e81e44c9b76417c04304e4, type: 3}
+    - image: {fileID: 2800000, guid: f839a2b3c8e81e44c9b76417c04304e4, type: 3}
+  - image: {fileID: 2800000, guid: 360662fb32d1ff444a85f83ce99d8237, type: 3}
+    shelfIndex: 2
+    slotIndex: 0
+    behindItems:
+    - image: {fileID: 2800000, guid: 2a14b858144f9054cbeb6d3e2d39d35e, type: 3}
+    - image: {fileID: 2800000, guid: 360662fb32d1ff444a85f83ce99d8237, type: 3}
+    - image: {fileID: 2800000, guid: 360662fb32d1ff444a85f83ce99d8237, type: 3}
+  - image: {fileID: 2800000, guid: 2a14b858144f9054cbeb6d3e2d39d35e, type: 3}
+    shelfIndex: 3
+    slotIndex: 1
+    behindItems:
+    - image: {fileID: 2800000, guid: 2d335908fd38c684f8b69da0b9d47599, type: 3}
+    - image: {fileID: 2800000, guid: 2d335908fd38c684f8b69da0b9d47599, type: 3}
+    - image: {fileID: 2800000, guid: 8dd932dd9de3c074db0d24c4e870019c, type: 3}
+    - image: {fileID: 2800000, guid: 8dd932dd9de3c074db0d24c4e870019c, type: 3}
+  - image: {fileID: 2800000, guid: 2a14b858144f9054cbeb6d3e2d39d35e, type: 3}
+    shelfIndex: 4
+    slotIndex: 0
+    behindItems:
+    - image: {fileID: 2800000, guid: 2a14b858144f9054cbeb6d3e2d39d35e, type: 3}
+    - image: {fileID: 2800000, guid: 2d335908fd38c684f8b69da0b9d47599, type: 3}
+    - image: {fileID: 2800000, guid: 2a14b858144f9054cbeb6d3e2d39d35e, type: 3}
+    - image: {fileID: 2800000, guid: 13e49b6d4ba1b14479f4db6ed5d02911, type: 3}
+    - image: {fileID: 2800000, guid: 2d335908fd38c684f8b69da0b9d47599, type: 3}

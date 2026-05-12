@@ -76,6 +76,15 @@ public class YGPlugin : MonoBehaviour
         Time.timeScale = 1;
     }
 
+    public void SendMetricEndLevel(int _level)
+    {
+        var eventData = new Dictionary<string, string>
+        {
+            {"level", _level.ToString()}
+        };
+        YG2.MetricaSend("end_level", eventData);
+    }
+
     public void SetPlayerLevel(string _level)
     {
         YG2.saves.level = _level;

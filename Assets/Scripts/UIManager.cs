@@ -22,6 +22,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] AudioSource throwEffect;
     [SerializeField] AudioSource collectedEffect;
     [SerializeField] AudioSource fanfareEffect;
+
+    [Header("Counts")]
+    [SerializeField] TextMeshProUGUI levelCountText;
     
     Camera cam;
     Vector2 startPoint = new Vector2();
@@ -79,6 +82,12 @@ public class UIManager : MonoBehaviour
         Slot[] allSlots = FindObjectsByType<Slot>(FindObjectsSortMode.None);
     }
 
+    void OnEnable()
+    {
+        musicDisabled.SetActive(!IsMusicActive());
+        sounIconDisabled.SetActive(!IsSoundsActive());
+    }
+
     void Update()
     {
         if (endLevel)
@@ -117,8 +126,6 @@ public class UIManager : MonoBehaviour
 
     public void PauseGame()
     {
-        if (gamePause) return;
-
         gamePause = true;
 
         if (pauseMenu != null)
@@ -126,22 +133,16 @@ public class UIManager : MonoBehaviour
             pauseMenu.SetActive(true);
             CheckSoundIcon();
         }
-
-        Time.timeScale = 0f;
     }
 
     public void UnpauseGame()
-    {
-        if (!gamePause) return;
-        
+    {        
         gamePause = false;
 
         if (GameObject.FindGameObjectWithTag("Popup"))
         {
             GameObject.FindGameObjectWithTag("Popup").SetActive(false);
         }
-
-        Time.timeScale = 1f;
     }
     
     public bool IsGamePause()
@@ -247,6 +248,18 @@ public class UIManager : MonoBehaviour
         {
             endLevel = true;
         }
+
+        UpdateLevel(_level);
+    }
+
+    public void UpdateLevel(int _level)
+    {
+        levelCountText.text = (_level + 1).ToString();
+    }
+
+    public void RestartLevel()
+    {
+        GridManager.main.Restart();
     }
 
     IEnumerator SuccessLevel()

@@ -8,6 +8,8 @@ public class GridManager : MonoBehaviour
 {
     public static GridManager main;
 
+    [SerializeField] int startLevelTest = 0;
+
     [Header("Prefabs")]
     [SerializeField] GameObject itemPrefab;
     [SerializeField] Transform itemsContainer;
@@ -43,7 +45,12 @@ public class GridManager : MonoBehaviour
     }
 
     public void Initialize()
-    {
+    {        
+        if (startLevelTest != 0)
+        {
+            YGPlugin.main.SetPlayerLevel(startLevelTest.ToString());
+        }        
+
         parentTransform = FindObjectOfType<LevelManager>().transform;
         currentLevel = int.Parse(YGPlugin.main.GetPlayerLevel());
 
@@ -52,6 +59,8 @@ public class GridManager : MonoBehaviour
             currentLevel = 0;
             YGPlugin.main.SetPlayerLevel(currentLevel.ToString());
         }
+
+        UIManager.main.UpdateLevel(currentLevel);
 
         GenerateLevel();
     }
@@ -172,12 +181,33 @@ public class GridManager : MonoBehaviour
             {
                 foreach (var behindItem in startItem.behindItems)
                 {
-                    CreateItem(targetSlot, behindItem.image, true);
+                    Sprite newBehindSprite = Sprite.Create(
+                        behindItem.image,
+                        new Rect(0.0f, 0.0f, behindItem.image.width, behindItem.image.height),
+                        new Vector2(0.5f, 0.5f),
+                        100.0f
+                    );
+
+                    newBehindSprite.name = behindItem.image.name;
+
+                    CreateItem(targetSlot, newBehindSprite, true);
                 }
             }
+            
+            Sprite newSprite = Sprite.Create(
+                startItem.image,
+                new Rect(0.0f, 0.0f, startItem.image.width, startItem.image.height),
+                new Vector2(0.5f, 0.5f),
+                100.0f
+            );
 
-            CreateItem(targetSlot, startItem.image, false);
+            newSprite.name = startItem.image.name;
+
+            CreateItem(targetSlot, newSprite, false);
         }
+
+        // print(allSlots.Count > allItems.Count);
+        // print(allItems.Count % 3);
     }
 
     void CreateItem(Slot slot, Sprite _image, bool _isBehind)
@@ -225,8 +255,7 @@ public class GridManager : MonoBehaviour
 
         if (allItems.Count <= 0 && UIManager.main != null)
         {
-            Nextlevel();
-            UIManager.main.EndLevel(currentLevel);
+            Nextlevel();            
         }
     }
 
@@ -240,6 +269,8 @@ public class GridManager : MonoBehaviour
         }
 
         YGPlugin.main.SetPlayerLevel(currentLevel.ToString());
+        YGPlugin.main.SendMetricEndLevel(currentLevel);
+        UIManager.main.EndLevel(currentLevel);
 
         if (coroutine != null)
         {
@@ -251,6 +282,11 @@ public class GridManager : MonoBehaviour
 
     IEnumerator ClearLevel()
     {
+        foreach (Item item in allItems)
+        {
+            item.DestroyItem();
+        }
+
         yield return new WaitForSeconds(0.3f);
 
         UIManager.main.PlayFanfareEffect();
@@ -271,6 +307,16 @@ public class GridManager : MonoBehaviour
         allSlots.Clear();
         allItems.Clear();
         GenerateLevel();
+    }
+
+    public void Restart()
+    {
+        if (coroutine != null)
+        {
+            StopCoroutine(coroutine);
+        }
+
+        coroutine = StartCoroutine(ClearLevel());
     }
 
     public void SetDraggable(bool _draggable)

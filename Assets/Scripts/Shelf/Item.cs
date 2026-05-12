@@ -10,7 +10,7 @@ public class Item : MonoBehaviour
     [SerializeField] GameObject destroyEffect;
     [SerializeField] GameObject disableImage;
 
-    Slot currentSlot;
+    public Slot currentSlot;
     bool moveToTarget = true;
     bool isDraggable = false;
     float speed = 2000f;
@@ -18,7 +18,7 @@ public class Item : MonoBehaviour
     float timerDestroy = 0f;
     float timeDestroy = 0.3f;
     bool animationPlay = false;
-    string name = "";
+    public string name = "";
     public bool isBehind = false;
     float behindDifferentSize = 15f;
     float offsetBehind = 30f;

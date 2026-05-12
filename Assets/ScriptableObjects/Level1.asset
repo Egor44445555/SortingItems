@@ -18,15 +18,15 @@ MonoBehaviour:
   - shelfType: 3
     rowIndex: 1
   startingItems:
-  - image: {fileID: -8548104044005507832, guid: b2af3c98ca19ffa43a74332480ddc353, type: 3}
+  - image: {fileID: 2800000, guid: c5ece7a0e16f1fa4e8bd1ea26ebecbe0, type: 3}
     shelfIndex: 0
     slotIndex: 0
     behindItems: []
-  - image: {fileID: -8548104044005507832, guid: b2af3c98ca19ffa43a74332480ddc353, type: 3}
+  - image: {fileID: 2800000, guid: c5ece7a0e16f1fa4e8bd1ea26ebecbe0, type: 3}
     shelfIndex: 1
     slotIndex: 0
     behindItems: []
-  - image: {fileID: -8548104044005507832, guid: b2af3c98ca19ffa43a74332480ddc353, type: 3}
+  - image: {fileID: 2800000, guid: c5ece7a0e16f1fa4e8bd1ea26ebecbe0, type: 3}
     shelfIndex: 1
     slotIndex: 2
     behindItems: []

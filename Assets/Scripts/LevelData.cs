@@ -14,7 +14,7 @@ public class LevelData : ScriptableObject
     [System.Serializable]
     public class ItemSpawn
     {
-        public Sprite image;
+        public Texture2D image;
         public int shelfIndex;
         public int slotIndex;
         public List<ItemSpawnBehind> behindItems;
@@ -23,7 +23,7 @@ public class LevelData : ScriptableObject
     [System.Serializable]
     public class ItemSpawnBehind
     {
-        public Sprite image;
+        public Texture2D image;
     }
 
     public List<ShelfConfig> shelvesConfig;

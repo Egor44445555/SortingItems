@@ -580,6 +580,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53cb1d63186f42f4292e5410a3393dac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridManager
+  startLevelTest: 0
   itemPrefab: {fileID: 7863188911948085220, guid: a08addaa08b5c0049af2d410c9938066, type: 3}
   itemsContainer: {fileID: 1152449412}
   shelfPrefabs:
@@ -591,6 +592,14 @@ MonoBehaviour:
   levelData:
   - {fileID: 11400000, guid: be2fcf50a79f2f94685121356b7aec5e, type: 2}
   - {fileID: 11400000, guid: f85a4be3bba2c4e4aab0421ebce43d21, type: 2}
+  - {fileID: 11400000, guid: 7248503e77410d04a8013018cbdcda4a, type: 2}
+  - {fileID: 11400000, guid: b47f323c64f095746929b331652258e8, type: 2}
+  - {fileID: 11400000, guid: 2267fd28e2d1ae14faba1f7f7dd004a8, type: 2}
+  - {fileID: 11400000, guid: e66394137ccdb264b906c402b7e3ee6b, type: 2}
+  - {fileID: 11400000, guid: 5248f1b4af3eb8f49862da58c2f75ae3, type: 2}
+  - {fileID: 11400000, guid: 901e80547009d6d45a0d5dafc7965094, type: 2}
+  - {fileID: 11400000, guid: cbb5fe812a0c4ac4398fd876efd9b3a8, type: 2}
+  - {fileID: 11400000, guid: 3b562670620e4a54da82f0a769828a3e, type: 2}
 --- !u!1 &1082981871
 GameObject:
   m_ObjectHideFlags: 0
@@ -788,6 +797,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 735677369984701660, guid: 469dec457b3e5e442b7a1b37d4fc0196, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -1.2888184
+      objectReference: {fileID: 0}
     - target: {fileID: 5094098945906380696, guid: 469dec457b3e5e442b7a1b37d4fc0196, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -889,6 +902,30 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7464507718038461242, guid: 469dec457b3e5e442b7a1b37d4fc0196, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8560745314966589358, guid: 469dec457b3e5e442b7a1b37d4fc0196, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8560745314966589358, guid: 469dec457b3e5e442b7a1b37d4fc0196, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8560745314966589358, guid: 469dec457b3e5e442b7a1b37d4fc0196, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8560745314966589358, guid: 469dec457b3e5e442b7a1b37d4fc0196, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8560745314966589358, guid: 469dec457b3e5e442b7a1b37d4fc0196, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8560745314966589358, guid: 469dec457b3e5e442b7a1b37d4fc0196, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}

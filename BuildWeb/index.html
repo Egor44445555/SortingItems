@@ -40,7 +40,7 @@
     </div>
     <div id="loading-cover" style="display:none;">
         <div id="unity-loading-bar">
-            <div id="unity-logo"><img src="Images/logo.png"></div>
+            
             <div id="unity-progress-bar-empty" style="display: none;">
                 <div id="unity-progress-bar-full"></div>
             </div>
@@ -88,11 +88,11 @@
 
         if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
             container.className = "unity-mobile";
-            //config.devicePixelRatio = 1;
+            
         }
 
         // The background image when loading the game. When building a build, the code changes depending on the project settings.
-        loadingCover.style.background = "url('Images/background.png') center / cover";
+        
         loadingCover.style.display = "";
 
         let StartUnityInstance;
@@ -110,11 +110,13 @@
         window.addEventListener('blur', () => SetVisibility(false));
         window.addEventListener('focus', () => SetVisibility(true));
 
-
         window.addEventListener('pointerdown', () => {
             FocusGame();
             SetVisibility(true);
         });
+
+        window.addEventListener('resize', () => FocusGame());
+        document.addEventListener('fullscreenchange', () => FocusGame());
 
         const oRequestPointerLock = Element.prototype.requestPointerLock;
         Element.prototype.requestPointerLock = async function hkRequestPointerLock(...args) {
@@ -157,8 +159,22 @@
             window.blurFocusHandlersInstalled = true;
         }
 
-        function FocusGame() {
-            if (!isPausedGame) canvas.focus();
+        function FocusGame(checkingPauseStatus = true) {
+            if (!canvas) return;
+
+            requestAnimationFrame(() => {
+                if (checkingPauseStatus && isPausedGame) return;
+
+                const active = document.activeElement;
+                if (active && (active.tagName === 'INPUT' ||
+                    active.tagName === 'TEXTAREA' ||
+                    active.isContentEditable
+                )) {
+                    return;
+                }
+
+                canvas.focus({ preventScroll: true });
+            });
         }
 
         function SetVisibility(visibility) {
@@ -181,6 +197,7 @@
         const ResumeCallback = () => {
             isPausedGame = false;
             YG2Instance('SetPauseGame', 'false');
+            FocusGame(false);
         };
 
         const script = document.createElement("script");
@@ -196,6 +213,7 @@
                     ygGameInstance = unityInstance;
                     loadingCover.style.background = "";
                     loadingCover.style.display = "none";
+                    FocusGame();
                     // Fill Background [Build Modify]
                 }).catch((message) => {
                     console.error(message);
@@ -261,11 +279,8 @@
             }
         }
 
-        function LogStyledMessage(message, style) {
+        function LogStyledMessage(message, style = 'color: #FFDF73; background-color: #454545') {
             console.log('%c' + message, style);
-        }
-        function LogStyledMessage(message) {
-            console.log('%c' + message, 'color: #FFDF73; background-color: #454545');
         }
 
         async function InitYSDK() {
@@ -281,8 +296,14 @@
                 // Additional init1 modules
 
                 // Additional init2 modules
+await InitPlayer();
+LogStyledMessage('Init Authorization ysdk');
+
 
                 // Additional init modules
+await LoadCloud();
+LogStyledMessage('Init Storage ysdk');
+
 
                 initYSDK = true;
                 if (ygGameInstance != null)
@@ -310,6 +331,221 @@
         }
 
         // Additional script modules
+LogStyledMessage('[PluginYG2 v2.0091] [Build: 0] [Platform: YandexGames]');
+
+var cloudSaves = NO_DATA;
+
+function SaveCloud(jsonData, flush) {
+    if (player == null) {
+        console.error('CRASH Save Cloud: ', 'Didnt have time to load');
+        return;
+    }
+    try {
+        player.setData({
+            saves: [jsonData],
+        }, flush);
+    } catch (e) {
+        console.error('CRASH Save Cloud: ', e.message);
+    }
+}
+
+function LoadCloud() {
+    return new Promise((resolve) => {
+        if (ysdk == null) {
+            Final(NO_DATA);
+            return;
+        }
+        try {
+            player.getData(["saves"]).then(data => {
+                if (data.saves) {
+                    Final(JSON.stringify(data.saves));
+                } else {
+                    Final(NO_DATA);
+                }
+            }).catch(() => {
+                console.error('Load Cloud Error!');
+                Final(NO_DATA);
+            });
+        }
+        catch (e) {
+            console.error('CRASH Load saves Cloud: ', e.message);
+            Final(NO_DATA);
+        }
+
+        function Final(res) {
+            cloudSaves = res;
+            YG2Instance('SetLoadSaves', res);
+            resolve(res);
+        }
+    });
+}
+
+
+function RewardedAdvShow(id) {
+    try {
+        ysdk.adv.showRewardedVideo(
+            {
+                callbacks:
+                {
+                    onOpen: () => {
+                        LogStyledMessage('Opened Rewarded Adv');
+                        YG2Instance('OpenRewardedAdv');
+                    },
+                    onClose: () => {
+                        LogStyledMessage('Closed Rewarded Adv');
+                        YG2Instance('CloseRewardedAdv');
+                        FocusGame();
+                    },
+                    onRewarded: () => {
+                        YG2Instance('RewardAdv', id);
+                    },
+                    onError: (err) => {
+                        console.error('Error Rewarded Adv', err);
+                        YG2Instance('ErrorRewardedAdv');
+                    }
+                }
+            });
+    } catch (err) {
+        console.error('CRASH Rewarded Adv Show: ', err.message);
+    }
+}
+
+
+let nowFullAdOpen = false;
+
+function InterAdvShow() {
+    try {
+        if (ysdk == null){
+            LogStyledMessage('Cancel InterAdvShow: SDK is not initialized');
+            return;
+        }
+        if (nowFullAdOpen == true){
+            LogStyledMessage('Cancel InterAdvShow: The advertisement is already open');
+            return;
+        }
+
+        ysdk.adv.showFullscreenAdv({
+            callbacks: {
+                onOpen: () => {
+                    LogStyledMessage('Open Interstitial Adv');
+                    nowFullAdOpen = true;
+                    if (initGame === true) {
+                        YG2Instance('OpenInterAdv');
+                    }
+                },
+                onClose: (wasShown) => {
+                    LogStyledMessage('Close Interstitial Adv');
+                    nowFullAdOpen = false;
+                    if (initGame === true) {
+                        if (wasShown) {
+                            YG2Instance('CloseInterAdv', 'true');
+                        }
+                            else {
+                            YG2Instance('CloseInterAdv', 'false');
+                        }
+                    }
+                    FocusGame();
+                },
+                onError: (error) => {
+                    console.error('Error Interstitial Adv', error);
+                    nowFullAdOpen = false;
+                    YG2Instance('ErrorInterAdv');
+                    FocusGame();
+                }
+            }
+        });
+    }
+    catch (e) {
+        console.error('CRASH Interstitial Adv Show: ', e.message);
+    }
+}
+
+var playerData = NO_DATA;
+let player = null;
+
+async function InitPlayer() {
+    try {
+        if (!ysdk) {
+            return Final(NotAuthorized(false));
+        }
+
+        player = await ysdk.getPlayer();
+
+        if (!player || !player.isAuthorized()) {
+            return Final(NotAuthorized(true));
+        }
+
+        const authJson = {
+            playerAuth: "resolved",
+            playerName: player.getName(),
+            playerId: player.getUniqueID(),
+            playerPhoto: player.getPhoto('medium'),
+            payingStatus: player.getPayingStatus()
+        };
+
+        return Final(JSON.stringify(authJson));
+    } catch (e) {
+        console.error('CRASH InitPlayer:', e?.message ?? e);
+        player = null;
+        return Final(NotAuthorized(false));
+    }
+
+    function Final(res) {
+        playerData = res;
+        YG2Instance('SetAuth', res);
+        return res;
+    }
+}
+
+function NotAuthorized(hasPlayer = false) {
+    const authJson = {
+        playerAuth: "rejected",
+        playerName: "unauthorized",
+        playerId: hasPlayer && player ? player.getUniqueID() : "unauthorized",
+        playerPhoto: "no data",
+        payingStatus: "unknown"
+    };
+
+    return JSON.stringify(authJson);
+}
+
+async function OpenAuthDialog() {
+    if (!ysdk) {
+        LogStyledMessage('OpenAuthDialog: ysdk is null');
+        return;
+    }
+
+    try {
+        player = await ysdk.getPlayer();
+
+        if (player.isAuthorized()) {
+            await InitPlayer();
+            YG2Instance('LoggedIn');
+            return;
+        }
+
+        try {
+            await ysdk.auth.openAuthDialog();
+            player = await ysdk.getPlayer();
+
+            if (player.isAuthorized()) {
+                await InitPlayer();
+                YG2Instance('LoggedIn');
+            } else {
+                await InitPlayer();
+                LogStyledMessage('Authorization dialog closed, player is still unauthorized');
+            }
+        } catch (e) {
+            await InitPlayer();
+            LogStyledMessage('Authorization canceled or failed:', e?.message ?? e);
+        }
+    } catch (e) {
+        player = null;
+        await InitPlayer();
+        LogStyledMessage('CRASH OpenAuthDialog / getPlayer:', e?.message ?? e);
+    }
+}
+
 
         document.body.appendChild(script);
     </script>

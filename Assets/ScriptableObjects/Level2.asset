@@ -22,27 +22,27 @@ MonoBehaviour:
   - shelfType: 2
     rowIndex: 2
   startingItems:
-  - image: {fileID: -3407656638557033091, guid: a2dbfde0ca68b284980a0d79419fcd5f, type: 3}
+  - image: {fileID: 2800000, guid: c5ece7a0e16f1fa4e8bd1ea26ebecbe0, type: 3}
     shelfIndex: 0
     slotIndex: 0
     behindItems: []
-  - image: {fileID: -3407656638557033091, guid: a2dbfde0ca68b284980a0d79419fcd5f, type: 3}
+  - image: {fileID: 2800000, guid: b2af3c98ca19ffa43a74332480ddc353, type: 3}
     shelfIndex: 1
     slotIndex: 0
     behindItems: []
-  - image: {fileID: -3407656638557033091, guid: a2dbfde0ca68b284980a0d79419fcd5f, type: 3}
+  - image: {fileID: 2800000, guid: c5ece7a0e16f1fa4e8bd1ea26ebecbe0, type: 3}
     shelfIndex: 1
     slotIndex: 1
     behindItems: []
-  - image: {fileID: 8086257608854207629, guid: cc7095e8c2a8be348bae73125abb2a9e, type: 3}
+  - image: {fileID: 2800000, guid: b2af3c98ca19ffa43a74332480ddc353, type: 3}
     shelfIndex: 2
     slotIndex: 0
     behindItems: []
-  - image: {fileID: 8086257608854207629, guid: cc7095e8c2a8be348bae73125abb2a9e, type: 3}
+  - image: {fileID: 2800000, guid: c5ece7a0e16f1fa4e8bd1ea26ebecbe0, type: 3}
     shelfIndex: 3
     slotIndex: 0
     behindItems: []
-  - image: {fileID: 8086257608854207629, guid: cc7095e8c2a8be348bae73125abb2a9e, type: 3}
+  - image: {fileID: 2800000, guid: b2af3c98ca19ffa43a74332480ddc353, type: 3}
     shelfIndex: 3
     slotIndex: 1
     behindItems: []
